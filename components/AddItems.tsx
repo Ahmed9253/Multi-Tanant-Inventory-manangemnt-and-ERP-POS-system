@@ -21,7 +21,7 @@ const AddItems = () => {
     setStockStatus("");
   };
 
-  const handleSubmit = async (e): Promise<void> => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
 
     setMessage("");
