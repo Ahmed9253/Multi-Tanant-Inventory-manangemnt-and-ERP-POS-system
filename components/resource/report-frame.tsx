@@ -21,7 +21,7 @@ export interface ReportCard {
   description?: string;
 }
 
-export function ReportFrame({
+export function ReportFrame<T extends Record<string, unknown> = Record<string, unknown>>({
   title,
   description,
   api,
@@ -32,12 +32,12 @@ export function ReportFrame({
   title: string;
   description: string;
   api: string;
-  columns: ReportColumn[];
+  columns: ReportColumn<T>[];
   cards: ReportCard[];
   recordsKey?: string;
 }) {
   const router = useRouter();
-  const [rows, setRows] = useState<Record<string, unknown>[]>([]);
+  const [rows, setRows] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export function ReportFrame({
       .then((d) => {
         if (d.success) {
           const data = d.data?.data || d.data?.[recordsKey] || d.data?.inventoryItems || d.data?.products || d.data || [];
-          setRows(Array.isArray(data) ? data : []);
+          setRows(Array.isArray(data) ? (data as T[]) : []);
         }
       })
       .catch(() => {})

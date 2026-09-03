@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react";
 import { ReportFrame, formatMoney } from "@/components/resource/report-frame";
 
-interface Sale {
+type Sale = {
   receiptNumber: string;
   customerId?: { name: string } | string;
   total: number;
   status: string;
   createdAt: string;
-}
+};
 
 export default function SalesReport() {
   const [state, setState] = useState<{ sales: Sale[]; loaded: boolean }>({ sales: [], loaded: false });
@@ -43,7 +43,7 @@ export default function SalesReport() {
   }
 
   return (
-    <ReportFrame
+    <ReportFrame<Sale>
       title="Sales Report"
       description="Sales performance and trends"
       api="/api/sales"

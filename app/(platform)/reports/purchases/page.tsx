@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react";
 import { ReportFrame, formatMoney } from "@/components/resource/report-frame";
 
-interface Purchase {
+type Purchase = {
   _id: string;
   supplierId?: { name: string; company?: string } | string;
   total: number;
   status: string;
   createdAt: string;
-}
+};
 
 export default function PurchaseReport() {
   const [state, setState] = useState<{ rows: Purchase[]; loaded: boolean }>({ rows: [], loaded: false });
@@ -36,7 +36,7 @@ export default function PurchaseReport() {
   ];
 
   return (
-    <ReportFrame
+    <ReportFrame<Purchase>
       title="Purchase Report"
       description="Purchase history and supplier analysis"
       api="/api/purchases"

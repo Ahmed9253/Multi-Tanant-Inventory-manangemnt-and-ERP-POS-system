@@ -2,12 +2,12 @@
 
 import { ReportFrame } from "@/components/resource/report-frame";
 
-interface InventoryRow {
+type InventoryRow = {
   _id: string;
   productId?: { name: string; sku: string; minimumStock?: number } | string;
   storeId?: { name: string } | string;
   quantity: number;
-}
+};
 
 function productName(r: InventoryRow) {
   return typeof r.productId === "object" && r.productId ? (r.productId as { name: string }).name : "-";
@@ -21,7 +21,7 @@ function storeName(r: InventoryRow) {
 
 export default function InventoryReport() {
   return (
-    <ReportFrame
+    <ReportFrame<InventoryRow>
       title="Inventory Report"
       description="Current stock levels and movements"
       api="/api/inventory"

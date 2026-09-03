@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react";
 import { ReportFrame, formatMoney } from "@/components/resource/report-frame";
 
-interface PayrollRow {
+type PayrollRow = {
   _id: string;
   employeeId?: { firstName: string; lastName: string; employeeNumber: string };
   grossPay: number;
   netPay: number;
   status: string;
-}
+};
 
 function empName(r: PayrollRow) {
   if (r.employeeId && typeof r.employeeId === "object") {
@@ -45,7 +45,7 @@ export default function PayrollReport() {
   ];
 
   return (
-    <ReportFrame
+    <ReportFrame<PayrollRow>
       title="Payroll Report"
       description="Payroll summaries and deductions"
       api="/api/payroll"

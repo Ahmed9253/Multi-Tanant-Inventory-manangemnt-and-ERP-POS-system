@@ -3,14 +3,14 @@
 import { useEffect, useState } from "react";
 import { ReportFrame, formatMoney } from "@/components/resource/report-frame";
 
-interface Expense {
+type Expense = {
   _id: string;
   description: string;
   categoryId?: string;
   amount: number;
   date: string;
   status: string;
-}
+};
 
 export default function ExpenseReport() {
   const [state, setState] = useState<{ rows: Expense[]; loaded: boolean }>({ rows: [], loaded: false });
@@ -38,7 +38,7 @@ export default function ExpenseReport() {
   ];
 
   return (
-    <ReportFrame
+    <ReportFrame<Expense>
       title="Expense Report"
       description="Expense breakdown by category"
       api="/api/expenses"
