@@ -55,7 +55,10 @@ const branchSchema = new mongoose.Schema(
 const Product = mongoose.model("Product", productSchema);
 const Sale = mongoose.model("Sale", saleSchema);
 const Branch = mongoose.model("Branch", branchSchema);
-const settingSchema = new mongoose.Schema({ key: { type: String, unique: true }, value: mongoose.Schema.Types.Mixed });
+const settingSchema = new mongoose.Schema({
+  key: { type: String, unique: true },
+  value: mongoose.Schema.Types.Mixed,
+});
 const Setting = mongoose.model("Setting", settingSchema);
 
 async function prepareProductIndexes() {
@@ -131,12 +134,45 @@ app.get("/api/sales", async (_request, response) =>
 app.get("/api/reports/monthly", async (_request, response) => {
   const firstUse = await Setting.findOne({ key: "firstUseAt" });
   const start = new Date(firstUse?.value || new Date());
-  start.setDate(1); start.setHours(0, 0, 0, 0);
-  const now = new Date(); const months: { month: string; bills: number; revenue: number; tax: number; discounts: number; items: number }[] = [];
-  for (const cursor = new Date(start); cursor <= now; cursor.setMonth(cursor.getMonth() + 1)) {
-    const next = new Date(cursor); next.setMonth(next.getMonth() + 1);
-    const [summary] = await Sale.aggregate([{ $match: { createdAt: { $gte: cursor, $lt: next } } }, { $group: { _id: null, bills: { $sum: 1 }, revenue: { $sum: "$total" }, tax: { $sum: "$tax" }, discounts: { $sum: "$discount" }, items: { $sum: { $sum: "$items.quantity" } } } }]);
-    months.push({ month: cursor.toLocaleString("en-US", { month: "long", year: "numeric" }), bills: summary?.bills || 0, revenue: summary?.revenue || 0, tax: summary?.tax || 0, discounts: summary?.discounts || 0, items: summary?.items || 0 });
+  start.setDate(1);
+  start.setHours(0, 0, 0, 0);
+  const now = new Date();
+  const months: {
+    month: string;
+    bills: number;
+    revenue: number;
+    tax: number;
+    discounts: number;
+    items: number;
+  }[] = [];
+  for (
+    const cursor = new Date(start);
+    cursor <= now;
+    cursor.setMonth(cursor.getMonth() + 1)
+  ) {
+    const next = new Date(cursor);
+    next.setMonth(next.getMonth() + 1);
+    const [summary] = await Sale.aggregate([
+      { $match: { createdAt: { $gte: cursor, $lt: next } } },
+      {
+        $group: {
+          _id: null,
+          bills: { $sum: 1 },
+          revenue: { $sum: "$total" },
+          tax: { $sum: "$tax" },
+          discounts: { $sum: "$discount" },
+          items: { $sum: { $sum: "$items.quantity" } },
+        },
+      },
+    ]);
+    months.push({
+      month: cursor.toLocaleString("en-US", { month: "long", year: "numeric" }),
+      bills: summary?.bills || 0,
+      revenue: summary?.revenue || 0,
+      tax: summary?.tax || 0,
+      discounts: summary?.discounts || 0,
+      items: summary?.items || 0,
+    });
   }
   response.json({ firstUseAt: start, months });
 });
@@ -197,7 +233,11 @@ app.post("/api/sales", async (request, response) => {
 async function start() {
   await mongoose.connect(mongoUri);
   await prepareProductIndexes();
-  await Setting.updateOne({ key: "firstUseAt" }, { $setOnInsert: { key: "firstUseAt", value: new Date() } }, { upsert: true });
+  await Setting.updateOne(
+    { key: "firstUseAt" },
+    { $setOnInsert: { key: "firstUseAt", value: new Date() } },
+    { upsert: true },
+  );
   app.listen(port, () =>
     console.log(`Tillora POS API running on http://localhost:${port}`),
   );
