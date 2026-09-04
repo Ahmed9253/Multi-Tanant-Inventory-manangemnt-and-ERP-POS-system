@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { startTransition, useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import "./App.css";
 
@@ -30,9 +30,10 @@ type Branch = {
   phone?: string;
   status: string;
 };
+type MonthlyReport = { month: string; bills: number; revenue: number; tax: number; discounts: number; items: number };
 const fallbackProducts: Product[] = [];
 /*
-  {
+type MonthlyReport = { month: string; bills: number; revenue: number; tax: number; discounts: number; items: number };
     _id: "1",
     name: "Cortado",
     category: "Coffee",
@@ -118,8 +119,9 @@ function App() {
     lowStock: 2,
   });
   const [view, setView] = useState<
-    "sell" | "dashboard" | "inventory" | "branches"
+    "sell" | "dashboard" | "inventory" | "branches" | "reports"
   >("sell");
+  const [monthlyReports, setMonthlyReports] = useState<MonthlyReport[]>([]);
   const [branches, setBranches] = useState<Branch[]>([]);
   const [showBranchForm, setShowBranchForm] = useState(false);
   const [branchForm, setBranchForm] = useState({
@@ -130,7 +132,7 @@ function App() {
     phone: "",
   });
   const [theme, setTheme] = useState(
-    () => localStorage.getItem("morrow-theme") || "light",
+    () => localStorage.getItem("tillora-theme") || "light",
   );
   const [category, setCategory] = useState("All items");
   const [query, setQuery] = useState("");
@@ -154,21 +156,31 @@ function App() {
 
   const refresh = async () => {
     try {
-      const [productResponse, metricResponse, branchResponse] =
+      const [productResponse, metricResponse, branchResponse, reportResponse] =
         await Promise.all([
           fetch("/api/products"),
           fetch("/api/dashboard"),
           fetch("/api/branches"),
+                  fetch("/api/reports/monthly"),
         ]);
-      if (productResponse.ok) setProducts(await productResponse.json());
-      if (metricResponse.ok) setMetrics(await metricResponse.json());
-      if (branchResponse.ok) setBranches(await branchResponse.json());
+      const nextProducts = productResponse.ok ? await productResponse.json() : null;
+      const nextMetrics = metricResponse.ok ? await metricResponse.json() : null;
+      const nextBranches = branchResponse.ok ? await branchResponse.json() : null;
+      const nextReports = reportResponse.ok ? (await reportResponse.json()).months : null;
+      startTransition(() => {
+        if (nextProducts) setProducts(nextProducts);
+        if (nextMetrics) setMetrics(nextMetrics);
+        if (nextBranches) setBranches(nextBranches);
+        if (nextReports) setMonthlyReports(nextReports);
+      });
     } catch {
       setLastSale("MongoDB is offline; using local catalog");
     }
   };
   useEffect(() => {
-    refresh();
+    queueMicrotask(() => {
+      void refresh();
+    });
   }, []);
   const visibleProducts = products.filter(
     (product) =>
@@ -322,7 +334,7 @@ function App() {
       <header className="topbar">
         <div className="brand">
           <span className="brand-mark">◌</span>
-          <span>morrow</span>
+          <span>Tillora</span>
           <small>ERP</small>
         </div>
         <nav className="main-nav">
@@ -349,6 +361,12 @@ function App() {
             onClick={() => setView("branches")}
           >
             ⌘ Branches
+          </button>
+          <button
+            className={view === "reports" ? "active" : ""}
+            onClick={() => setView("reports")}
+          >
+            ▤ Reports
           </button>
         </nav>
         <div className="store-status">
@@ -385,6 +403,8 @@ function App() {
         />
       ) : view === "branches" ? (
         <Branches branches={branches} onAdd={() => setShowBranchForm(true)} />
+      ) : view === "reports" ? (
+        <Reports reports={monthlyReports} />
       ) : (
         <main className="workspace">
           <section className="catalog-panel">
@@ -632,7 +652,7 @@ function App() {
         </div>
       )}
       <footer>
-        <span>morrow ERP · Operator workspace</span>
+        <span>Tillora POS and ERP · Operator workspace</span>
         <span>
           <i className="status-dot" /> All systems operational
         </span>
@@ -931,6 +951,12 @@ function Dashboard({
     </main>
   );
 }
+function Reports({ reports }: { reports: MonthlyReport[] }) {
+  const totals = reports.reduce((summary, row) => ({ bills: summary.bills + row.bills, revenue: summary.revenue + row.revenue, tax: summary.tax + row.tax, discounts: summary.discounts + row.discounts, items: summary.items + row.items }), { bills: 0, revenue: 0, tax: 0, discounts: 0, items: 0 });
+  const exportCsv = () => { const header = "Month,Bills,Items sold,Revenue,Tax,Discounts\n"; const body = reports.map((row) => [row.month, row.bills, row.items, row.revenue.toFixed(2), row.tax.toFixed(2), row.discounts.toFixed(2)].join(",")).join("\n"); const blob = new Blob([header + body], { type: "text/csv" }); const url = URL.createObjectURL(blob); const anchor = document.createElement("a"); anchor.href = url; anchor.download = "tillora-monthly-report.csv"; anchor.click(); URL.revokeObjectURL(url); };
+  return <main className="module-page reports-page"><div className="module-heading"><div><p className="eyebrow">REPORTING WORKBOOK</p><h1>Monthly reports</h1><p className="subheading">A living spreadsheet of every bill and month since Tillora was first used.</p></div><button className="primary-button" onClick={exportCsv}>Export spreadsheet</button></div><div className="report-summary"><div><span>Total bills</span><strong>{totals.bills}</strong></div><div><span>Total items sold</span><strong>{totals.items}</strong></div><div><span>Total revenue</span><strong>{money(totals.revenue)}</strong></div><div><span>Total tax</span><strong>{money(totals.tax)}</strong></div></div><section className="spreadsheet-card"><div className="spreadsheet-heading"><div><p className="eyebrow">BILLING LEDGER</p><h2>Monthly sales sheet</h2></div><span className="chart-period">Calculated from MongoDB sales</span></div><div className="spreadsheet"><div className="spreadsheet-row spreadsheet-head"><span>Month</span><span>Bills</span><span>Items sold</span><span>Revenue</span><span>Tax</span><span>Discounts</span></div>{reports.length ? reports.map((row) => <div className="spreadsheet-row" key={row.month}><strong>{row.month}</strong><span>{row.bills}</span><span>{row.items}</span><b>{money(row.revenue)}</b><span>{money(row.tax)}</span><span>{money(row.discounts)}</span></div>) : <div className="spreadsheet-empty">Your first month will appear here after the first bill is completed.</div>}<div className="spreadsheet-row spreadsheet-total"><strong>All time</strong><b>{totals.bills}</b><b>{totals.items}</b><b>{money(totals.revenue)}</b><b>{money(totals.tax)}</b><b>{money(totals.discounts)}</b></div></div></section><div className="report-notes"><div><strong>What is included</strong><p>Every completed POS bill, item quantity, revenue, tax, and discount is grouped into its calendar month.</p></div><div><strong>Starting point</strong><p>The workbook begins in the month Tillora was first connected to your database and continues automatically.</p></div></div></main>;
+}
+
 function Inventory({
   products,
   onAdd,

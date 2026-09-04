@@ -1,6 +1,6 @@
-# Morrow POS and ERP
+# Tillora POS and ERP
 
-Morrow is a browser-based point of sale and operations system for a retail store. It combines checkout, product management, inventory control, branches, sales reporting, and MongoDB persistence in one application.
+Tillora is a browser-based point of sale and operations system for a retail store. It combines checkout, product management, inventory control, branches, sales reporting, and MongoDB persistence in one application.
 
 ## Current capabilities
 
@@ -72,7 +72,7 @@ Morrow is a browser-based point of sale and operations system for a retail store
 Create a `.env` file in the project root:
 
 ```env
-MONGODB_URI=mongodb://127.0.0.1:27017/morrow_pos
+MONGODB_URI=mongodb://127.0.0.1:27017/tillora_pos
 PORT=4000
 ```
 
