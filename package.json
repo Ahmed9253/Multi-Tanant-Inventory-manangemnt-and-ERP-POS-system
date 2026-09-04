@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "server": "tsx server.ts",
+    "server": "tsx server-run.ts",
     "dev:full": "concurrently \"npm run server\" \"npm run dev\"",
+    "start": "npm run build && concurrently \"npm run server\" \"npm run dev\"",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview"

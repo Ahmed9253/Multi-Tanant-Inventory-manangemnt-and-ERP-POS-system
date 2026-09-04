@@ -3,7 +3,8 @@ import cors from "cors";
 import express from "express";
 import mongoose from "mongoose";
 
-const app = express();
+export const app = express();
+export default app;
 const port = Number(process.env.PORT || 4000);
 const mongoUri =
   process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/tillora_pos";
@@ -235,20 +236,27 @@ app.post("/api/sales", async (request, response) => {
   response.status(201).json(sale);
 });
 
-async function start() {
-  await mongoose.connect(mongoUri);
-  await prepareProductIndexes();
-  await Setting.updateOne(
-    { key: "firstUseAt" },
-    { $setOnInsert: { key: "firstUseAt", value: new Date() } },
-    { upsert: true },
-  );
+let dbConnectionPromise: Promise<void> | null = null;
+
+export function connectDB(): Promise<void> {
+  if (mongoose.connection.readyState === 1) return Promise.resolve();
+  if (!dbConnectionPromise) {
+    dbConnectionPromise = (async () => {
+      await mongoose.connect(mongoUri);
+      await prepareProductIndexes();
+      await Setting.updateOne(
+        { key: "firstUseAt" },
+        { $setOnInsert: { key: "firstUseAt", value: new Date() } },
+        { upsert: true },
+      );
+    })();
+  }
+  return dbConnectionPromise;
+}
+
+export async function start() {
+  await connectDB();
   app.listen(port, () =>
     console.log(`Tillora POS API running on http://localhost:${port}`),
   );
 }
-
-start().catch((error) => {
-  console.error("Could not start API:", error.message);
-  process.exit(1);
-});
