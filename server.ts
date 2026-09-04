@@ -128,6 +128,11 @@ app.patch("/api/branches/:id", async (request, response) => {
   if (!branch) return response.status(404).json({ error: "Branch not found" });
   response.json(branch);
 });
+app.delete("/api/branches/:id", async (request, response) => {
+  const branch = await Branch.findByIdAndDelete(request.params.id);
+  if (!branch) return response.status(404).json({ error: "Branch not found" });
+  response.status(204).send();
+});
 app.get("/api/sales", async (_request, response) =>
   response.json(await Sale.find().sort({ createdAt: -1 }).limit(12)),
 );

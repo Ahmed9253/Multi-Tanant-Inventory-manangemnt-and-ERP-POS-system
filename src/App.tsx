@@ -3,6 +3,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import type { FormEvent } from "react";
@@ -139,7 +140,9 @@ function App() {
   const [activeBranchId, setActiveBranchId] = useState(
     () => localStorage.getItem("tillora-active-branch") || "",
   );
+  const [forceBranchSetup, setForceBranchSetup] = useState(false);
   const [dataReady, setDataReady] = useState(false);
+  const branchMutationVersion = useRef(0);
   const [showBranchForm, setShowBranchForm] = useState(false);
   const [branchForm, setBranchForm] = useState({
     name: "",
@@ -155,6 +158,7 @@ function App() {
   const [showHelp, setShowHelp] = useState(false);
   const isMac = /Mac|iPhone|iPad/.test(navigator.platform);
   const shortcut = isMac ? "⌘ /" : "Ctrl /";
+  const searchShortcut = isMac ? "⌘ K" : "Ctrl K";
   const [category, setCategory] = useState("All items");
   const [query, setQuery] = useState("");
   const [cart, setCart] = useState<Record<string, number>>({});
@@ -162,6 +166,10 @@ function App() {
   const [customer, setCustomer] = useState("");
   const [discount, setDiscount] = useState("");
   const [lastSale, setLastSale] = useState<string | null>(null);
+  const [branchNotice, setBranchNotice] = useState<{
+    kind: "error" | "success";
+    text: string;
+  } | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -190,6 +198,7 @@ function App() {
   }, [isMac]);
 
   const refresh = useCallback(async () => {
+    const refreshVersion = branchMutationVersion.current;
     try {
       const [productResponse, metricResponse, branchResponse, reportResponse] =
         await Promise.all([
@@ -213,9 +222,14 @@ function App() {
       startTransition(() => {
         if (nextProducts) setProducts(nextProducts);
         if (nextMetrics) setMetrics(nextMetrics);
-        if (nextBranches) setBranches(nextBranches);
+        if (nextBranches && refreshVersion === branchMutationVersion.current)
+          setBranches(nextBranches);
         if (nextReports) setMonthlyReports(nextReports);
-        if (nextBranches?.length && !activeBranchId) {
+        if (
+          nextBranches?.length &&
+          !activeBranchId &&
+          refreshVersion === branchMutationVersion.current
+        ) {
           setActiveBranchId(nextBranches[0]._id);
           localStorage.setItem("tillora-active-branch", nextBranches[0]._id);
         }
@@ -364,7 +378,9 @@ function App() {
       });
       if (!response.ok) throw new Error();
       const branch = await response.json();
+      branchMutationVersion.current += 1;
       setBranches((current) => [...current, branch]);
+      setForceBranchSetup(false);
       setActiveBranchId(branch._id);
       localStorage.setItem("tillora-active-branch", branch._id);
       setBranchForm({
@@ -375,8 +391,42 @@ function App() {
         phone: "",
       });
       setShowBranchForm(false);
+      setBranchNotice({ kind: "success", text: `${branch.name} created.` });
     } catch {
-      setLastSale("Connect MongoDB to save this branch");
+      setBranchNotice({ kind: "error", text: "Connect MongoDB to save this branch" });
+    }
+  };
+  const deleteBranch = async (branch: Branch) => {
+    if (!window.confirm(`Delete ${branch.name} permanently?`)) return;
+    branchMutationVersion.current += 1;
+    try {
+      const response = await fetch(`/api/branches/${branch._id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok)
+        throw new Error(
+          (await response.text()) || `Delete failed (${response.status})`,
+        );
+      const remaining = branches.filter((item) => item._id !== branch._id);
+      setBranches(remaining);
+      setBranchNotice({ kind: "success", text: `${branch.name} deleted.` });
+      if (branch._id === activeBranchId) {
+        const next = remaining[0];
+        if (next) {
+          setActiveBranchId(next._id);
+          localStorage.setItem("tillora-active-branch", next._id);
+        } else {
+          setActiveBranchId("");
+          localStorage.removeItem("tillora-active-branch");
+          setForceBranchSetup(true);
+        }
+      }
+    } catch (error) {
+      setBranchNotice({
+        kind: "error",
+        text:
+          error instanceof Error ? error.message : "Could not delete branch",
+      });
     }
   };
 
@@ -395,7 +445,7 @@ function App() {
         <span>Preparing your workspace</span>
       </div>
     );
-  if (!branches.length)
+  if (forceBranchSetup || !branches.length)
     return (
       <BranchEntryPage
         branchForm={branchForm}
@@ -486,7 +536,9 @@ function App() {
         <Branches
           branches={branches}
           activeBranchId={activeBranch?._id}
+          notice={branchNotice}
           onEnter={enterBranch}
+          onDelete={deleteBranch}
           onAdd={() => setShowBranchForm(true)}
         />
       ) : view === "reports" ? (
@@ -511,7 +563,7 @@ function App() {
                   onChange={(event) => handleSearch(event.target.value)}
                   placeholder="Search products..."
                 />
-                <kbd>⌘ K</kbd>
+                <kbd>{searchShortcut}</kbd>
               </label>
               <button className="filter-button">☷ Filter</button>
             </div>
@@ -738,7 +790,11 @@ function App() {
         </div>
       )}
       {showHelp && (
-        <HelpModal shortcut={shortcut} onClose={() => setShowHelp(false)} />
+        <HelpModal
+          shortcut={shortcut}
+          searchShortcut={searchShortcut}
+          onClose={() => setShowHelp(false)}
+        />
       )}
       <footer>
         <span>Quibble Byte · Tillora POS and ERP</span>
@@ -757,9 +813,11 @@ function App() {
 
 function HelpModal({
   shortcut,
+  searchShortcut,
   onClose,
 }: {
   shortcut: string;
+  searchShortcut: string;
   onClose: () => void;
 }) {
   return (
@@ -773,11 +831,15 @@ function HelpModal({
       >
         <div className="help-modal-header">
           <div>
-            <p className="eyebrow">TILLORA GUIDE</p>
-            <h2 id="help-title">How to use your workspace</h2>
+            <div className="help-title-row">
+              <span className="help-logo">T</span>
+              <div>
+                <p className="eyebrow">QUIBBLE BYTE / TILLORA</p>
+                <h2 id="help-title">Your command center</h2>
+              </div>
+            </div>
             <p>
-              Everything you need to run the register and keep operations
-              current.
+              A quick guide to the daily rhythm of your POS and ERP workspace.
             </p>
           </div>
           <button
@@ -788,11 +850,26 @@ function HelpModal({
             ×
           </button>
         </div>
+        <div className="help-shortcuts">
+          <span>Quick commands</span>
+          <div>
+            <kbd>{shortcut}</kbd>
+            <small>Open help</small>
+          </div>
+          <div>
+            <kbd>{searchShortcut}</kbd>
+            <small>Focus search</small>
+          </div>
+          <div>
+            <kbd>Esc</kbd>
+            <small>Close dialog</small>
+          </div>
+        </div>
         <div className="help-grid">
           <article>
             <span className="help-number">01</span>
             <div>
-              <h3>Take a sale</h3>
+              <h3>Sell with confidence</h3>
               <p>
                 Open Sell, search for a product or scan its barcode, adjust
                 quantities, choose payment, then charge the order.
@@ -802,7 +879,7 @@ function HelpModal({
           <article>
             <span className="help-number">02</span>
             <div>
-              <h3>Manage inventory</h3>
+              <h3>Keep stock current</h3>
               <p>
                 Use Inventory to add products, edit price and stock inline,
                 search by SKU or barcode, and delete products with confirmation.
@@ -812,7 +889,7 @@ function HelpModal({
           <article>
             <span className="help-number">03</span>
             <div>
-              <h3>Set up branches</h3>
+              <h3>Run every branch</h3>
               <p>
                 Open Branches and create your main location first. Add a code,
                 manager, contact details, and address.
@@ -822,7 +899,7 @@ function HelpModal({
           <article>
             <span className="help-number">04</span>
             <div>
-              <h3>Read reports</h3>
+              <h3>Understand the numbers</h3>
               <p>
                 Reports groups completed bills by month from first use. Export
                 the billing ledger as a spreadsheet CSV.
@@ -831,10 +908,12 @@ function HelpModal({
           </article>
         </div>
         <div className="help-modal-footer">
-          <span>Keyboard shortcut</span>
-          <kbd>{shortcut}</kbd>
+          <div>
+            <span className="help-status-dot" /> Tillora is ready for your next
+            move
+          </div>
           <button className="primary-button" onClick={onClose}>
-            Back to workspace
+            Back to workspace <span>→</span>
           </button>
         </div>
       </section>
@@ -1513,12 +1592,16 @@ function Inventory({
 function Branches({
   branches,
   activeBranchId,
+  notice,
   onEnter,
+  onDelete,
   onAdd,
 }: {
   branches: Branch[];
   activeBranchId?: string;
+  notice?: { kind: "error" | "success"; text: string } | null;
   onEnter: (branch: Branch) => void;
+  onDelete: (branch: Branch) => void;
   onAdd: () => void;
 }) {
   return (
@@ -1535,6 +1618,9 @@ function Branches({
           ＋ Create branch
         </button>
       </div>
+      {notice && (
+        <div className={`branch-notice ${notice.kind}`}>{notice.text}</div>
+      )}
       <div className="branch-hero">
         <div>
           <span className="hero-kicker">NETWORK OVERVIEW</span>
@@ -1573,11 +1659,24 @@ function Branches({
                   Contact<strong>{branch.phone || "No phone"}</strong>
                 </span>
               </div>
-              <button className="branch-enter" onClick={() => onEnter(branch)}>
-                {branch._id === activeBranchId
-                  ? "Current workspace"
-                  : "Enter branch →"}
-              </button>
+              <div className="branch-actions">
+                <button
+                  type="button"
+                  className="branch-enter"
+                  onClick={() => onEnter(branch)}
+                >
+                  {branch._id === activeBranchId
+                    ? "Current workspace"
+                    : "Enter branch →"}
+                </button>
+                <button
+                  type="button"
+                  className="branch-delete"
+                  onClick={() => onDelete(branch)}
+                >
+                  Delete
+                </button>
+              </div>
             </article>
           ))
         ) : (

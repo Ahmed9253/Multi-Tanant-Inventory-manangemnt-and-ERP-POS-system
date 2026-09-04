@@ -1,55 +1,102 @@
 # Tillora POS and ERP
 
-Tillora is a browser-based point of sale and operations system for a retail store. It combines checkout, product management, inventory control, branches, sales reporting, and MongoDB persistence in one application.
+Tillora is a branch-first point of sale and operations workspace created by Quibble Byte. It is designed for a trusted store operator who needs checkout, inventory, branches, sales reporting, and MongoDB persistence in one focused application.
 
-## Current capabilities
+## First launch
 
-### Point of sale
+Tillora starts from the customer workspace, not from demo data.
 
-- Product search and category filtering
-- Barcode and SKU lookup from the product search field
-- Cart quantity controls
-- Customer name and discount entry
-- Automatic subtotal, tax, discount, and total calculations
-- Card, cash, and other payment methods
-- Sale creation through the backend
-- Automatic inventory reduction after a completed sale
+1. Start the frontend and API.
+2. Open the browser at `http://localhost:5173`.
+3. Create the first branch on the setup page.
+4. Enter the new branch workspace.
+5. Add products from Inventory.
+6. Create the first POS order.
+
+The first branch becomes the active workspace. The active branch is saved in browser storage for that browser, and the Branches module can be used to create or enter another branch later.
+
+There are no seeded products, sample sales, or hardcoded main branch records. New installations begin with an empty product collection and an empty sales collection.
+
+## Modules
+
+### Sell
+
+- Search products by name
+- Search or scan by SKU and barcode
+- Add products to a cart
+- Adjust quantities
+- Add an optional customer
+- Apply a discount
+- Calculate subtotal, tax, discount, and total dynamically
+- Select card, cash, or other payment
+- Complete a sale and decrease product stock
+- Start from order `#0001` when the sales collection is empty
 
 ### Dashboard
 
-- Revenue totals
-- Order totals
+- Total revenue
+- Total order count
 - Inventory value
 - Units on hand
 - Low-stock count
 - Revenue pulse chart
 - Product catalog overview
 
-### Inventory management
+### Inventory
 
-- Product creation form
-- Product name, category, price, stock, barcode, and generated SKU
-- Search by product name, SKU, or barcode
-- Inline price updates
-- Inline stock updates
-- Inventory value calculations
-- Low-stock highlighting
-- Permanent product deletion with confirmation
+- Add products
+- Set category, price, stock, and barcode
+- Generate a SKU automatically when one is not supplied
+- Search by name, SKU, or barcode
+- Edit price inline
+- Edit stock inline
+- See calculated inventory value
+- See low-stock warnings
+- Delete products with browser confirmation
 
-### Branch management
+### Branches
 
-- Branch overview page
-- Main branch empty state for a new installation
-- Branch creation form
-- Branch code, manager, address, phone, and status
-- MongoDB-backed branch records
+- First-run branch setup page
+- First branch becomes the initial active workspace
+- Branch name and unique code
+- Manager, address, and phone fields
+- Branch overview cards
+- Enter any branch as the active workspace
+- Create additional branches after setup
+
+### Reports
+
+- Dynamic monthly billing ledger
+- Starts from the first-use month saved in MongoDB
+- Bill count by month
+- Items sold by month
+- Revenue by month
+- Tax by month
+- Discounts by month
+- All-time totals
+- CSV spreadsheet export
 
 ### Interface
 
-- Light and dark themes
-- Theme preference saved in browser storage
-- Responsive layout for desktop and mobile screens
-- Operator workspace without authentication
+- Tillora POS and ERP branding
+- Quibble Byte footer credit
+- Light and dark theme
+- Local date and time display
+- Responsive desktop and mobile layouts
+- Help command center
+- No authentication in this trusted-operator version
+
+## Keyboard controls
+
+Tillora detects the operating system and displays the correct shortcut labels.
+
+| Action                | macOS         | Windows and Linux |
+| --------------------- | ------------- | ----------------- |
+| Open or close help    | `Command + /` | `Ctrl + /`        |
+| Search products       | `Command + K` | `Ctrl + K`        |
+| Close the help dialog | `Esc`         | `Esc`             |
+
+The footer and help dialog always show the platform-appropriate label. The browser clock uses the current machine locale and time zone.
 
 ## Technology
 
@@ -69,18 +116,16 @@ Tillora is a browser-based point of sale and operations system for a retail stor
 
 ## Configuration
 
-Create a `.env` file in the project root:
+Create a private `.env` file in the project root:
 
 ```env
 MONGODB_URI=mongodb://127.0.0.1:27017/tillora_pos
 PORT=4000
 ```
 
-For MongoDB Atlas, replace `MONGODB_URI` with the connection string supplied by Atlas. Keep the `.env` file private and do not commit it.
+For MongoDB Atlas, replace `MONGODB_URI` with the Atlas connection string. Do not commit `.env` or share the connection string publicly.
 
 ## Installation
-
-Install dependencies:
 
 ```bash
 npm install
@@ -94,35 +139,30 @@ Run the frontend and backend together:
 npm run dev:full
 ```
 
-Open the application at:
+Frontend:
 
 ```text
 http://localhost:5173
 ```
 
-The API runs at:
+Backend:
 
 ```text
 http://localhost:4000
 ```
 
-## Separate development processes
-
-Start only the frontend:
+Run the services separately when needed:
 
 ```bash
 npm run dev
-```
-
-Start only the backend:
-
-```bash
 npm run server
 ```
 
-## Production build
+The Vite development server proxies `/api` requests to the Express server on port `4000`.
 
-Run the client build:
+## Validation
+
+Build the frontend:
 
 ```bash
 npm run build
@@ -134,7 +174,7 @@ Run linting:
 npm run lint
 ```
 
-Check the backend types:
+Check backend TypeScript:
 
 ```bash
 npx tsc server.ts --noEmit --ignoreConfig --target ES2022 --module NodeNext --moduleResolution NodeNext --esModuleInterop
@@ -142,13 +182,13 @@ npx tsc server.ts --noEmit --ignoreConfig --target ES2022 --module NodeNext --mo
 
 ## API routes
 
-### Health
+Health:
 
 ```text
 GET /api/health
 ```
 
-### Products
+Products:
 
 ```text
 GET    /api/products
@@ -157,16 +197,14 @@ PATCH  /api/products/:id
 DELETE /api/products/:id
 ```
 
-### Sales
+Sales:
 
 ```text
 GET  /api/sales
 POST /api/sales
 ```
 
-Creating a sale stores the transaction and decreases stock for every product in the sale.
-
-### Branches
+Branches:
 
 ```text
 GET    /api/branches
@@ -174,37 +212,40 @@ POST   /api/branches
 PATCH  /api/branches/:id
 ```
 
-### Dashboard
+Dashboard:
 
 ```text
 GET /api/dashboard
 ```
 
-The dashboard route calculates revenue, order count, inventory value, units on hand, low-stock count, and daily sales data from MongoDB.
+Monthly reports:
 
-## Product setup after reset
+```text
+GET /api/reports/monthly
+```
 
-This installation starts with an empty product collection and an empty sales collection. The first POS order is `#0001`. Use the Inventory page to create the first product. Enter its name, category, price, stock quantity, and optional barcode. A SKU is generated automatically when one is not supplied by the API request.
+## Data behavior
 
-The branch collection is separate from products. Create the main branch first, then add other operating locations as needed.
+The backend saves the first-use timestamp in the settings collection. Monthly reports begin on that month and continue through the current month. Months without sales still appear with zero values, so the report is a complete operating calendar rather than only a list of active months.
 
-## MongoDB data safety
+Sales are stored separately from products. Completing a sale reduces the stock of each referenced product. Deleting a product does not delete historical sales.
 
-The backend removes one obsolete product index named `businessId_1_sku_1` during startup. This migration only removes the outdated index and does not delete branches, sales, or other collections.
-
-Product deletion is available from the Inventory page and requires browser confirmation. Deleting a product removes its product record and removes it from any currently open local cart. Historical sales are stored separately.
+The backend removes the obsolete `businessId_1_sku_1` product index during startup if it exists. This migration only removes that outdated index and does not delete branches, sales, or settings.
 
 ## Project structure
 
 ```text
-src/App.tsx       React application and module views
+src/App.tsx       React application, onboarding, modules, and workflows
 src/App.css       Application styles and responsive layouts
 src/index.css     Global document styles
-server.ts         Express API and Mongoose models
+server.ts         Express API, Mongoose models, and reports
 vite.config.ts    Vite configuration and API proxy
+index.html        Browser document title and app entry point
 .env              Local MongoDB configuration
 ```
 
-## Notes
+## Deployment notes
 
-Authentication is intentionally not included in this version. The application is designed for a trusted internal operator environment. Add authentication and role permissions before exposing it to a public network.
+Set `MONGODB_URI` and `PORT` in the deployment environment. Build the client with `npm run build`, serve the generated `dist` directory using your preferred web server, and run the API with `npm run server`.
+
+Configure the frontend server to proxy `/api` requests to the running Express API, or serve the API and client behind the same origin. Before exposing the system publicly, add authentication, user roles, audit logging, validation limits, and production error monitoring.
