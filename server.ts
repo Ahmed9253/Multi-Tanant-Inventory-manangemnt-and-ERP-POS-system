@@ -56,16 +56,16 @@ const Product = mongoose.model("Product", productSchema);
 const Sale = mongoose.model("Sale", saleSchema);
 const Branch = mongoose.model("Branch", branchSchema);
 
-const seedProducts = [
-  ["Cortado", "Coffee", 4.5, 12],
-  ["Iced Matcha", "Coffee", 6.25, 8],
-  ["Cinnamon Roll", "Bakery", 5, 4],
-  ["Butter Croissant", "Bakery", 4.25, 15],
-  ["Almond Cookie", "Bakery", 3.5, 20],
-  ["Sparkling Water", "Drinks", 3, 24],
-  ["Berry Kombucha", "Drinks", 5.5, 6],
-  ["House Granola", "Pantry", 9.5, 7],
-];
+async function prepareProductIndexes() {
+  const indexes = await Product.collection.listIndexes().toArray();
+  const legacyIndex = indexes.find(
+    (index) => index.name === "businessId_1_sku_1",
+  );
+  if (legacyIndex) {
+    await Product.collection.dropIndex(legacyIndex.name);
+    console.log("Removed legacy product index businessId_1_sku_1");
+  }
+}
 
 app.get("/api/health", (_request, response) =>
   response.json({
@@ -97,6 +97,12 @@ app.patch("/api/products/:id", async (request, response) => {
   if (!product)
     return response.status(404).json({ error: "Product not found" });
   response.json(product);
+});
+app.delete("/api/products/:id", async (request, response) => {
+  const product = await Product.findByIdAndDelete(request.params.id);
+  if (!product)
+    return response.status(404).json({ error: "Product not found" });
+  response.status(204).send();
 });
 app.get("/api/branches", async (_request, response) =>
   response.json(await Branch.find().sort({ createdAt: 1 })),
@@ -176,15 +182,7 @@ app.post("/api/sales", async (request, response) => {
 
 async function start() {
   await mongoose.connect(mongoUri);
-  if ((await Product.countDocuments()) === 0)
-    await Product.insertMany(
-      seedProducts.map(([name, category, price, stock]) => ({
-        name,
-        category,
-        price,
-        stock,
-      })),
-    );
+  await prepareProductIndexes();
   app.listen(port, () =>
     console.log(`Morrow POS API running on http://localhost:${port}`),
   );

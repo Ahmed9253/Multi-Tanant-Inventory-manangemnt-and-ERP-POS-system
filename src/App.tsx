@@ -30,7 +30,8 @@ type Branch = {
   phone?: string;
   status: string;
 };
-const fallbackProducts: Product[] = [
+const fallbackProducts: Product[] = [];
+/*
   {
     _id: "1",
     name: "Cortado",
@@ -103,7 +104,7 @@ const fallbackProducts: Product[] = [
     color: "olive",
     icon: "❋",
   },
-];
+]; */
 const categories = ["All items", "Coffee", "Bakery", "Drinks", "Pantry"];
 const money = (value: number) => `$${value.toFixed(2)}`;
 
@@ -133,7 +134,7 @@ function App() {
   );
   const [category, setCategory] = useState("All items");
   const [query, setQuery] = useState("");
-  const [cart, setCart] = useState<Record<string, number>>({ "1": 1, "3": 1 });
+  const [cart, setCart] = useState<Record<string, number>>({});
   const [payment, setPayment] = useState("Card");
   const [customer, setCustomer] = useState("");
   const [discount, setDiscount] = useState("");
@@ -234,7 +235,7 @@ function App() {
       setLastSale("Sale captured locally; MongoDB is offline");
     }
     setLastSale(
-      `Order #${Math.floor(1000 + Math.random() * 8999)} completed via ${payment}`,
+      `Order #${String(metrics.orders + 1).padStart(4, "0")} completed via ${payment}`,
     );
     setCart({});
     setCustomer("");
@@ -280,6 +281,17 @@ function App() {
           product._id === id ? { ...product, [field]: Number(value) } : product,
         ),
       );
+  };
+  const deleteProduct = async (id: string) => {
+    if (!window.confirm("Delete this product permanently?")) return;
+    const response = await fetch(`/api/products/${id}`, { method: "DELETE" });
+    if (!response.ok) return;
+    setProducts((current) => current.filter((product) => product._id !== id));
+    setCart((current) => {
+      const next = { ...current };
+      delete next[id];
+      return next;
+    });
   };
   const addBranch = async (event: FormEvent) => {
     event.preventDefault();
@@ -369,6 +381,7 @@ function App() {
           products={products}
           onAdd={() => setShowForm(true)}
           onUpdate={updateProduct}
+          onDelete={deleteProduct}
         />
       ) : view === "branches" ? (
         <Branches branches={branches} onAdd={() => setShowBranchForm(true)} />
@@ -447,6 +460,7 @@ function App() {
             setPayment={setPayment}
             completeSale={completeSale}
             lastSale={lastSale}
+            orderNumber={metrics.orders + 1}
           />
         </main>
       )}
@@ -646,6 +660,7 @@ function OrderPanel({
   setPayment,
   completeSale,
   lastSale,
+  orderNumber,
 }: {
   cartItems: Product[];
   cart: Record<string, number>;
@@ -662,13 +677,14 @@ function OrderPanel({
   setPayment: (value: string) => void;
   completeSale: () => void;
   lastSale: string | null;
+  orderNumber: number;
 }) {
   return (
     <aside className="order-panel">
       <div className="order-header">
         <div>
           <p className="eyebrow">CURRENT ORDER</p>
-          <h2>Order #1048</h2>
+          <h2>Order #{String(orderNumber).padStart(4, "0")}</h2>
         </div>
         <button className="more-button">•••</button>
       </div>
@@ -919,10 +935,12 @@ function Inventory({
   products,
   onAdd,
   onUpdate,
+  onDelete,
 }: {
   products: Product[];
   onAdd: () => void;
   onUpdate: (id: string, field: "stock" | "price", value: string) => void;
+  onDelete: (id: string) => void;
 }) {
   const [query, setQuery] = useState("");
   const visible = products.filter((product) =>
@@ -990,6 +1008,7 @@ function Inventory({
           <span>Price</span>
           <span>Stock level</span>
           <span>Value</span>
+          <span>Actions</span>
         </div>
         {visible.map((product) => (
           <div className="inventory-row" key={product._id}>
@@ -1028,6 +1047,13 @@ function Inventory({
               />
             </label>
             <b>{money(product.price * product.stock)}</b>
+            <button
+              className="delete-product"
+              onClick={() => onDelete(product._id)}
+              title={`Delete ${product.name}`}
+            >
+              Delete
+            </button>
           </div>
         ))}
       </div>

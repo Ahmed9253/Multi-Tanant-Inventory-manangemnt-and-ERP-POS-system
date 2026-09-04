@@ -755,7 +755,7 @@ html[data-theme="dark"] select {
 .inventory-table-head,
 .inventory-row {
   display: grid;
-  grid-template-columns: 1.4fr 1.2fr 0.8fr 0.7fr 0.8fr 0.7fr;
+  grid-template-columns: 1.4fr 1.2fr 0.8fr 0.7fr 0.8fr 0.7fr 0.6fr;
   gap: 16px;
   align-items: center;
   padding: 15px 18px;
@@ -803,6 +803,18 @@ html[data-theme="dark"] select {
 .inventory-row .stock-input.low {
   color: #b36d42;
   border-color: #d5a276;
+}
+.delete-product {
+  border: 1px solid #d5a0a0;
+  border-radius: 4px;
+  padding: 6px 8px;
+  background: transparent;
+  color: #a44f4f;
+  font-size: 10px;
+  font-weight: 700;
+}
+.delete-product:hover {
+  background: #fff0f0;
 }
 .sr-only {
   position: absolute;
