@@ -441,7 +441,7 @@ function App() {
     return (
       <div className="entry-loading">
         <span className="brand-mark">◌</span>
-        <strong>Tillora</strong>
+        <strong>Trello</strong>
         <span>Preparing your workspace</span>
       </div>
     );
@@ -459,7 +459,7 @@ function App() {
       <header className="topbar">
         <div className="brand">
           <span className="brand-mark">◌</span>
-          <span>Tillora</span>
+          <span>Trello</span>
           <small>ERP</small>
         </div>
         <nav className="main-nav">
@@ -797,7 +797,7 @@ function App() {
         />
       )}
       <footer>
-        <span>Quibble Byte · Tillora POS and ERP</span>
+        <span>Quibble Byte · Trello POS and ERP</span>
         <span>
           <i className="status-dot" /> All systems operational
         </span>
@@ -834,7 +834,7 @@ function HelpModal({
             <div className="help-title-row">
               <span className="help-logo">T</span>
               <div>
-                <p className="eyebrow">QUIBBLE BYTE / TILLORA</p>
+                <p className="eyebrow">QUIBBLE BYTE / TRELLO</p>
                 <h2 id="help-title">Your command center</h2>
               </div>
             </div>
@@ -909,7 +909,7 @@ function HelpModal({
         </div>
         <div className="help-modal-footer">
           <div>
-            <span className="help-status-dot" /> Tillora is ready for your next
+            <span className="help-status-dot" /> Trello is ready for your next
             move
           </div>
           <button className="primary-button" onClick={onClose}>
@@ -946,12 +946,12 @@ function BranchEntryPage({
     <main className="entry-page">
       <div className="entry-brand">
         <span className="brand-mark">◌</span>
-        <strong>Tillora</strong>
+        <strong>Trello</strong>
         <small>POS AND ERP</small>
       </div>
       <div className="entry-layout">
         <section className="entry-intro">
-          <p className="eyebrow">WELCOME TO TILLORA</p>
+          <p className="eyebrow">WELCOME TO TRELLO</p>
           <h1>Start with your first branch.</h1>
           <p>
             Set up the location where your team will sell, manage inventory, and
@@ -1030,12 +1030,12 @@ function BranchEntryPage({
             />
           </label>
           <button className="primary-button entry-submit" type="submit">
-            Enter Tillora <span>→</span>
+            Enter Trello <span>→</span>
           </button>
         </form>
       </div>
       <footer>
-        <span>Quibble Byte · Tillora POS and ERP</span>
+        <span>Quibble Byte · Trello POS and ERP</span>
         <span>Private operator workspace</span>
       </footer>
     </main>
@@ -1369,7 +1369,7 @@ function Reports({ reports }: { reports: MonthlyReport[] }) {
           <p className="eyebrow">REPORTING WORKBOOK</p>
           <h1>Monthly reports</h1>
           <p className="subheading">
-            A living spreadsheet of every bill and month since Tillora was first
+            A living spreadsheet of every bill and month since Trello was first
             used.
           </p>
         </div>
@@ -1450,7 +1450,7 @@ function Reports({ reports }: { reports: MonthlyReport[] }) {
         <div>
           <strong>Starting point</strong>
           <p>
-            The workbook begins in the month Tillora was first connected to your
+            The workbook begins in the month Trello was first connected to your
             database and continues automatically.
           </p>
         </div>

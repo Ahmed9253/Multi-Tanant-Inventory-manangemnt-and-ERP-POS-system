@@ -257,6 +257,6 @@ export function connectDB(): Promise<void> {
 export async function start() {
   await connectDB();
   app.listen(port, () =>
-    console.log(`Tillora POS API running on http://localhost:${port}`),
+    console.log(`Trello POS API running on http://localhost:${port}`),
   );
 }
