@@ -6,7 +6,7 @@ import {
   type ReactNode,
 } from "react";
 import type { Role, User } from "../types";
-import { api } from "../lib/api";
+import { api, endpoints } from "../lib/api";
 
 type LoginResult = { ok: boolean; error: string | null };
 
@@ -43,7 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password: string,
       loginType?: "admin" | "hr" | "employee",
     ): Promise<LoginResult> => {
-      const { data, error } = await api.postDetail<User>("/api/auth/login", {
+      const { data, error } = await api.postDetail<User>(endpoints.auth.login, {
         email,
         password,
         loginType,

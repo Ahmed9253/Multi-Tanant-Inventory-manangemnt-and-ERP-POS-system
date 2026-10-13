@@ -8,9 +8,13 @@
     "server": "tsx server-run.ts",
     "dev:full": "concurrently \"npm run server\" \"npm run dev\"",
     "start": "npm run build && concurrently \"npm run server\" \"npm run dev\"",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && npm run typecheck:server && vite build",
+    "typecheck:server": "tsc -p tsconfig.server.json",
     "lint": "oxlint",
     "preview": "vite preview"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "dependencies": {
     "cors": "^2.8.6",

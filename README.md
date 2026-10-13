@@ -2,111 +2,22 @@
 
 WorkNest is a branch-first point of sale and operations workspace created by Quibble Byte. It is designed for a trusted store operator who needs checkout, inventory, branches, sales reporting, and MongoDB persistence in one focused application.
 
+- **Frontend** — React 19 + TypeScript + Vite (static SPA)
+- **Backend** — Express 5 + Mongoose 9 (routed as a single serverless function on Vercel)
+- **Database** — MongoDB / MongoDB Atlas
+
 ## First launch
 
 WorkNest starts from the customer workspace, not from demo data.
 
 1. Start the frontend and API.
 2. Open the browser at `http://localhost:5173`.
-3. Create the first branch on the setup page.
+3. Sign in as admin, then create the first branch on the setup page.
 4. Enter the new branch workspace.
 5. Add products from Inventory.
 6. Create the first POS order.
 
 The first branch becomes the active workspace. The active branch is saved in browser storage for that browser, and the Branches module can be used to create or enter another branch later.
-
-There are no seeded products, sample sales, or hardcoded main branch records. New installations begin with an empty product collection and an empty sales collection.
-
-## Modules
-
-### Sell
-
-- Search products by name
-- Search or scan by SKU and barcode
-- Add products to a cart
-- Adjust quantities
-- Add an optional customer
-- Apply a discount
-- Calculate subtotal, tax, discount, and total dynamically
-- Select card, cash, or other payment
-- Complete a sale and decrease product stock
-- Start from order `#0001` when the sales collection is empty
-
-### Dashboard
-
-- Total revenue
-- Total order count
-- Inventory value
-- Units on hand
-- Low-stock count
-- Revenue pulse chart
-- Product catalog overview
-
-### Inventory
-
-- Add products
-- Set category, price, stock, and barcode
-- Generate a SKU automatically when one is not supplied
-- Search by name, SKU, or barcode
-- Edit price inline
-- Edit stock inline
-- See calculated inventory value
-- See low-stock warnings
-- Delete products with browser confirmation
-
-### Branches
-
-- First-run branch setup page
-- First branch becomes the initial active workspace
-- Branch name and unique code
-- Manager, address, and phone fields
-- Branch overview cards
-- Enter any branch as the active workspace
-- Create additional branches after setup
-
-### Reports
-
-- Dynamic monthly billing ledger
-- Starts from the first-use month saved in MongoDB
-- Bill count by month
-- Items sold by month
-- Revenue by month
-- Tax by month
-- Discounts by month
-- All-time totals
-- CSV spreadsheet export
-
-### Interface
-
-- WorkNest POS and ERP branding
-- Quibble Byte footer credit
-- Light and dark theme
-- Local date and time display
-- Responsive desktop and mobile layouts
-- Help command center
-- No authentication in this trusted-operator version
-
-## Keyboard controls
-
-WorkNest detects the operating system and displays the correct shortcut labels.
-
-| Action                | macOS         | Windows and Linux |
-| --------------------- | ------------- | ----------------- |
-| Open or close help    | `Command + /` | `Ctrl + /`        |
-| Search products       | `Command + K` | `Ctrl + K`        |
-| Close the help dialog | `Esc`         | `Esc`             |
-
-The footer and help dialog always show the platform-appropriate label. The browser clock uses the current machine locale and time zone.
-
-## Technology
-
-- React 19
-- TypeScript
-- Vite
-- Express
-- Mongoose
-- MongoDB
-- Oxlint
 
 ## Requirements
 
@@ -114,22 +25,19 @@ The footer and help dialog always show the platform-appropriate label. The brows
 - npm
 - MongoDB Atlas or a local MongoDB server
 
-## Configuration
-
-Create a private `.env` file in the project root:
-
-```env
-MONGODB_URI=mongodb://127.0.0.1:27017/tillora_pos
-PORT=4000
-```
-
-For MongoDB Atlas, replace `MONGODB_URI` with the Atlas connection string. Do not commit `.env` or share the connection string publicly.
-
 ## Installation
 
 ```bash
 npm install
 ```
+
+Create your local environment file:
+
+```bash
+cp .env.example .env
+```
+
+Then edit `.env` if you need a different MongoDB connection string or admin login.
 
 ## Development
 
@@ -139,90 +47,164 @@ Run the frontend and backend together:
 npm run dev:full
 ```
 
-Frontend:
-
-```text
-http://localhost:5173
-```
-
-Backend:
-
-```text
-http://localhost:4000
-```
+| Service  | URL                     |
+| -------- | ----------------------- |
+| Frontend | `http://localhost:5173` |
+| Backend  | `http://localhost:4000` |
 
 Run the services separately when needed:
 
 ```bash
-npm run dev
-npm run server
+npm run dev      # frontend only
+npm run server   # backend only
 ```
 
-The Vite development server proxies `/api` requests to the Express server on port `4000`.
+The Vite dev server proxies `/api` requests to the Express server (see `vite.config.ts`).
 
-## Validation
+## Environment variables
 
-Build the frontend:
+| Variable                | Used by | Local value                                     | Vercel value                                              |
+| ----------------------- | ------- | ----------------------------------------------- | --------------------------------------------------------- |
+| `MONGODB_URI`           | API     | `mongodb://127.0.0.1:27017/worknest_pos`        | Atlas string `mongodb+srv://<user>:<pass>@<cluster>/...`  |
+| `PORT`                  | API     | `4000`                                          | not needed (ignored by serverless)                        |
+| `ADMIN_NAME`            | API     | `Administrator`                                 | same                                                      |
+| `ADMIN_EMAIL`           | API     | `admin@worknest.com`                            | a real admin email                                        |
+| `ADMIN_PASSWORD`        | API     | `admin123`                                      | a strong password                                         |
+| `CLIENT_ORIGIN`         | API     | empty (Vite proxies same-origin)                | empty for one domain, or your deployed URL                |
+| `VITE_API_BASE_URL`     | Web     | empty (Vite proxy)                              | empty for same origin, or your API origin                 |
+| `VITE_API_PROXY_TARGET` | Web dev | `http://localhost:4000`                         | not needed                                                |
 
-```bash
-npm run build
+**What changes between local and Vercel**
+
+- **`MONGODB_URI`** must point at a hosted database (MongoDB Atlas). A local `127.0.0.1` address does not exist on Vercel.
+- **`VITE_API_BASE_URL`** — keep it **empty** on Vercel because the frontend and API share the same domain (`/api/*` is rewritten to the serverless function). Only set it if you host the API on a different domain.
+- **`VITE_API_PROXY_TARGET`** and **`PORT`** are local-only; Vercel does not need them.
+- Set every variable in **Project → Settings → Environment Variables** on Vercel. Variables are not read from a committed `.env` file.
+
+Only variables prefixed with `VITE_` are bundled into the browser build.
+
+## API access from the frontend
+
+All API calls go through `src/lib/api.ts`. The base URL comes from `VITE_API_BASE_URL` and every path lives in the exported `endpoints` map, so no component hardcodes a URL.
+
+```ts
+import { api, endpoints } from "../lib/api";
+
+await api.get(endpoints.products.list);
+await api.post(endpoints.products.create, form);
+await api.patch(endpoints.products.update(id), patch);
 ```
 
-Run linting:
+## Scripts
 
-```bash
-npm run lint
-```
+| Command                   | Description                                       |
+| ------------------------- | ------------------------------------------------- |
+| `npm run dev`             | Start the Vite dev server                         |
+| `npm run server`          | Start the Express API with `tsx`                  |
+| `npm run dev:full`        | Start frontend and API together                   |
+| `npm run build`           | Type-check web + server, then build the SPA       |
+| `npm run typecheck:server`| Type-check only the API (`tsconfig.server.json`)  |
+| `npm run preview`         | Preview the production build locally              |
+| `npm run lint`            | Run Oxlint                                        |
 
-Check backend TypeScript:
+## Project structure
 
-```bash
-npx tsc server.ts --noEmit --ignoreConfig --target ES2022 --module NodeNext --moduleResolution NodeNext --esModuleInterop
+```text
+src/                        React application
+  lib/api.ts                API base URL + endpoint map (single source of truth)
+  context/                  Auth and store providers
+  pages/                    Landing, login, and module pages
+  styles/                   Design tokens and stylesheets
+server/                     Express application (routes / controllers / models)
+  app.ts                    Express app, middleware, error handling
+  index.ts                  Local server bootstrap + connectDB export
+  config/env.ts             Environment variables
+  db/connect.ts             Cached MongoDB connection
+  models/                   Mongoose models
+  controllers/              Route handler logic
+  routes/                   Express routers
+  middleware/               DB guard, async handler, error handler
+api/index.ts                Vercel serverless entry point
+server-run.ts               Local API launcher
+vercel.json                 Vercel build, function, and rewrite config
 ```
 
 ## API routes
 
-Health:
-
 ```text
-GET /api/health
-```
+GET    /api/health
 
-Products:
+POST   /api/auth/login
 
-```text
 GET    /api/products
 POST   /api/products
 PATCH  /api/products/:id
 DELETE /api/products/:id
-```
 
-Sales:
-
-```text
-GET  /api/sales
-POST /api/sales
-```
-
-Branches:
-
-```text
 GET    /api/branches
 POST   /api/branches
 PATCH  /api/branches/:id
+DELETE /api/branches/:id
+
+GET    /api/sales
+POST   /api/sales
+
+GET    /api/dashboard
+GET    /api/reports/monthly
+
+GET    /api/customers
+POST   /api/customers
+PATCH  /api/customers/:id
+DELETE /api/customers/:id
+
+GET    /api/settings
+PATCH  /api/settings
+
+GET    /api/employees
+POST   /api/employees
+PATCH  /api/employees/:id
+DELETE /api/employees/:id
+
+GET    /api/payroll
+POST   /api/payroll
+POST   /api/payroll/generate
+PATCH  /api/payroll/:id
+DELETE /api/payroll/:id
 ```
 
-Dashboard:
+## Deploying to Vercel
 
-```text
-GET /api/dashboard
+1. Push the project to a Git repository and import it at [vercel.com/new](https://vercel.com/new).
+2. Vercel reads `vercel.json`:
+   - **Framework**: Vite
+   - **Build command**: `npm run build`
+   - **Output directory**: `dist`
+   - **Function**: `api/index.ts` (the whole Express app)
+   - `/api/*` is rewritten to the function while keeping the original path.
+3. Add the environment variables from the table above in **Project → Settings → Environment Variables**. At minimum:
+   - `MONGODB_URI` (Atlas connection string)
+   - `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`
+   - `VITE_API_BASE_URL` = empty
+4. Deploy. Or use the CLI:
+
+```bash
+npm i -g vercel
+vercel          # preview deployment
+vercel --prod   # production deployment
 ```
 
-Monthly reports:
+To pull the deployed environment variables for local development:
 
-```text
-GET /api/reports/monthly
+```bash
+vercel link
+vercel env pull
 ```
+
+### MongoDB Atlas checklist
+
+- Create a database user and allow access from everywhere (`0.0.0.0/0`) or from Vercel's IPs.
+- Use the SRV connection string and include the database name, e.g. `.../worknest_pos`.
+- Never commit the connection string. `.env` is git-ignored; `.env.example` contains placeholders only.
 
 ## Data behavior
 
@@ -230,22 +212,4 @@ The backend saves the first-use timestamp in the settings collection. Monthly re
 
 Sales are stored separately from products. Completing a sale reduces the stock of each referenced product. Deleting a product does not delete historical sales.
 
-The backend removes the obsolete `businessId_1_sku_1` product index during startup if it exists. This migration only removes that outdated index and does not delete branches, sales, or settings.
-
-## Project structure
-
-```text
-src/App.tsx       React application, onboarding, modules, and workflows
-src/App.css       Application styles and responsive layouts
-src/index.css     Global document styles
-server.ts         Express API, Mongoose models, and reports
-vite.config.ts    Vite configuration and API proxy
-index.html        Browser document title and app entry point
-.env              Local MongoDB configuration
-```
-
-## Deployment notes
-
-Set `MONGODB_URI` and `PORT` in the deployment environment. Build the client with `npm run build`, serve the generated `dist` directory using your preferred web server, and run the API with `npm run server`.
-
-Configure the frontend server to proxy `/api` requests to the running Express API, or serve the API and client behind the same origin. Before exposing the system publicly, add authentication, user roles, audit logging, validation limits, and production error monitoring.
+The backend removes the obsolete `businessId_1_sku_1` product index during startup if it exists.

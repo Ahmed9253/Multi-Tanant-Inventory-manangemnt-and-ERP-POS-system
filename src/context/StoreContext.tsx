@@ -28,7 +28,7 @@ import type {
   Toast,
   ToastKind,
 } from "../types";
-import { api } from "../lib/api";
+import { api, endpoints } from "../lib/api";
 import { defaultSettings } from "../lib/constants";
 
 type StoreContextValue = {
@@ -129,14 +129,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       employeeData,
       payrollData,
     ] = await Promise.all([
-      api.get<Product[]>("/api/products"),
-      api.get<Metrics>("/api/dashboard"),
-      api.get<Branch[]>("/api/branches"),
-      api.get<{ months: MonthlyReport[] }>("/api/reports/monthly"),
-      api.get<Customer[]>("/api/customers"),
-      api.get<Settings>("/api/settings"),
-      api.get<Employee[]>("/api/employees"),
-      api.get<Payroll[]>("/api/payroll"),
+      api.get<Product[]>(endpoints.products.list),
+      api.get<Metrics>(endpoints.dashboard),
+      api.get<Branch[]>(endpoints.branches.list),
+      api.get<{ months: MonthlyReport[] }>(endpoints.reports.monthly),
+      api.get<Customer[]>(endpoints.customers.list),
+      api.get<Settings>(endpoints.settings),
+      api.get<Employee[]>(endpoints.employees.list),
+      api.get<Payroll[]>(endpoints.payroll.list),
     ]);
     startTransition(() => {
       if (productData) setProducts(productData);
@@ -168,7 +168,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const addProduct = useCallback(
     async (form: ProductForm): Promise<boolean> => {
-      const product = await api.post<Product>("/api/products", form);
+      const product = await api.post<Product>(endpoints.products.create, form);
       if (!product) {
         pushToast("error", "Connect MongoDB to save new products");
         return false;
@@ -182,9 +182,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const updateProduct = useCallback(
     async (id: string, field: "stock" | "price", value: string) => {
-      const product = await api.patch<Product>(`/api/products/${id}`, {
-        [field]: Number(value),
-      });
+      const product = await api.patch<Product>(
+        endpoints.products.update(id),
+        {
+          [field]: Number(value),
+        },
+      );
       if (product)
         setProducts((current) =>
           current.map((item) =>
@@ -197,7 +200,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const deleteProduct = useCallback(
     async (id: string) => {
-      const ok = await api.delete(`/api/products/${id}`);
+      const ok = await api.delete(endpoints.products.remove(id));
       if (ok === null) return;
       setProducts((current) => current.filter((item) => item._id !== id));
       pushToast("info", "Product deleted");
@@ -207,7 +210,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const addBranch = useCallback(
     async (form: BranchForm): Promise<boolean> => {
-      const branch = await api.post<Branch>("/api/branches", form);
+      const branch = await api.post<Branch>(endpoints.branches.create, form);
       if (!branch) {
         setBranchNotice({ kind: "error", text: "Connect MongoDB to save this branch" });
         return false;
@@ -226,7 +229,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const deleteBranch = useCallback(
     async (branch: Branch) => {
       branchMutationVersion.current += 1;
-      const ok = await api.delete(`/api/branches/${branch._id}`);
+      const ok = await api.delete(endpoints.branches.remove(branch._id));
       if (ok === null) {
         setBranchNotice({ kind: "error", text: "Could not delete branch" });
         return;
@@ -247,7 +250,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const addCustomer = useCallback(
     async (form: CustomerForm): Promise<boolean> => {
-      const customer = await api.post<Customer>("/api/customers", form);
+      const customer = await api.post<Customer>(
+        endpoints.customers.create,
+        form,
+      );
       if (!customer) {
         pushToast("error", "Could not save customer");
         return false;
@@ -263,7 +269,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const updateCustomer = useCallback(
     async (id: string, form: CustomerForm): Promise<boolean> => {
-      const customer = await api.patch<Customer>(`/api/customers/${id}`, form);
+      const customer = await api.patch<Customer>(
+        endpoints.customers.update(id),
+        form,
+      );
       if (!customer) {
         pushToast("error", "Could not update customer");
         return false;
@@ -279,7 +288,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const deleteCustomer = useCallback(
     async (id: string) => {
-      const ok = await api.delete(`/api/customers/${id}`);
+      const ok = await api.delete(endpoints.customers.remove(id));
       if (ok === null) return;
       setCustomers((current) => current.filter((item) => item._id !== id));
       pushToast("info", "Customer removed");
@@ -289,7 +298,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const updateSettings = useCallback(
     async (patch: Partial<Settings>) => {
-      const updated = await api.patch<Settings>("/api/settings", patch);
+      const updated = await api.patch<Settings>(endpoints.settings, patch);
       if (updated) {
         setSettings({ ...defaultSettings, ...updated });
         pushToast("success", "Settings saved");
@@ -302,7 +311,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const recordSale = useCallback(
     async (payload: SalePayload) => {
-      await api.post("/api/sales", payload);
+      await api.post(endpoints.sales.create, payload);
       void refresh();
     },
     [refresh],
@@ -310,7 +319,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const addEmployee = useCallback(
     async (form: EmployeeForm): Promise<boolean> => {
-      const employee = await api.post<Employee>("/api/employees", form);
+      const employee = await api.post<Employee>(
+        endpoints.employees.create,
+        form,
+      );
       if (!employee) {
         pushToast("error", "Could not save employee");
         return false;
@@ -324,7 +336,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const updateEmployee = useCallback(
     async (id: string, form: Partial<EmployeeForm>): Promise<boolean> => {
-      const employee = await api.patch<Employee>(`/api/employees/${id}`, form);
+      const employee = await api.patch<Employee>(
+        endpoints.employees.update(id),
+        form,
+      );
       if (!employee) {
         pushToast("error", "Could not update employee");
         return false;
@@ -340,7 +355,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const deleteEmployee = useCallback(
     async (id: string) => {
-      const ok = await api.delete(`/api/employees/${id}`);
+      const ok = await api.delete(endpoints.employees.remove(id));
       if (ok === null) return;
       setEmployees((current) => current.filter((item) => item._id !== id));
       pushToast("info", "Employee removed");
@@ -350,7 +365,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const addPayroll = useCallback(
     async (form: PayrollForm): Promise<boolean> => {
-      const record = await api.post<Payroll>("/api/payroll", form);
+      const record = await api.post<Payroll>(endpoints.payroll.create, form);
       if (!record) {
         pushToast("error", "Could not create payroll record");
         return false;
@@ -364,7 +379,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const updatePayroll = useCallback(
     async (id: string, patch: Record<string, unknown>) => {
-      const record = await api.patch<Payroll>(`/api/payroll/${id}`, patch);
+      const record = await api.patch<Payroll>(
+        endpoints.payroll.update(id),
+        patch,
+      );
       if (!record) {
         pushToast("error", "Could not update payroll");
         return;
@@ -379,7 +397,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const deletePayroll = useCallback(
     async (id: string) => {
-      const ok = await api.delete(`/api/payroll/${id}`);
+      const ok = await api.delete(endpoints.payroll.remove(id));
       if (ok === null) return;
       setPayroll((current) => current.filter((item) => item._id !== id));
       pushToast("info", "Payroll record removed");
@@ -390,7 +408,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const generatePayroll = useCallback(
     async (month: string): Promise<number> => {
       const result = await api.post<{ created: number }>(
-        "/api/payroll/generate",
+        endpoints.payroll.generate,
         { month },
       );
       if (!result) {

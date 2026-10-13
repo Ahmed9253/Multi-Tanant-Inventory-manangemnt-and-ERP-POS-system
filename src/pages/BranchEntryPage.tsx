@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import type { BranchForm } from "../types";
 import { useStore } from "../context/StoreContext";
+import { useAuth } from "../context/AuthContext";
 import { Button } from "../components/Button";
 
 const emptyForm: BranchForm = {
@@ -13,6 +14,7 @@ const emptyForm: BranchForm = {
 
 export function BranchEntryPage() {
   const { addBranch } = useStore();
+  const { user, logout } = useAuth();
   const [form, setForm] = useState<BranchForm>(emptyForm);
 
   const handleSubmit = async (event: FormEvent) => {
@@ -23,11 +25,22 @@ export function BranchEntryPage() {
 
   return (
     <main className="entry-page">
-      <div className="entry-brand">
-        <span className="brand-mark">◌</span>
-        <strong>WorkNest</strong>
-        <small>POS AND ERP</small>
-      </div>
+      <header className="entry-topbar">
+        <div className="entry-brand">
+          <span className="brand-mark">◌</span>
+          <strong>WorkNest</strong>
+          <small>POS AND ERP</small>
+        </div>
+        <button
+          type="button"
+          className="entry-logout"
+          onClick={logout}
+          title={user ? `Sign out ${user.name}` : "Sign out"}
+        >
+          <span>Sign out</span>
+          <span aria-hidden="true">⏻</span>
+        </button>
+      </header>
       <div className="entry-layout">
         <section className="entry-intro">
           <p className="eyebrow">WELCOME TO WORKNEST</p>

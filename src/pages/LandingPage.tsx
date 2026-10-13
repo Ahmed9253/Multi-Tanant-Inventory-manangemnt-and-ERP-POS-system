@@ -100,30 +100,100 @@ const workflowSteps: { num: string; icon: string; title: string; desc: string }[
   },
 ];
 
+const highlights: { icon: string; title: string; desc: string }[] = [
+  {
+    icon: "🏪",
+    title: "Branch-first",
+    desc: "Run one store or many from a single workspace with per-branch switching.",
+  },
+  {
+    icon: "📦",
+    title: "Live inventory",
+    desc: "Stock, pricing, and low-stock alerts stay accurate with every sale.",
+  },
+  {
+    icon: "🛡",
+    title: "Role-based access",
+    desc: "Admins, HR, and employees each see only the tools they need.",
+  },
+];
+
+const permissionRows = [
+  { mod: "Point of Sale", a: true, h: false, e: true },
+  { mod: "Dashboard", a: true, h: true, e: true },
+  { mod: "Inventory", a: true, h: false, e: true },
+  { mod: "Branches", a: true, h: false, e: true },
+  { mod: "Reports", a: true, h: true, e: true },
+  { mod: "Customers", a: true, h: true, e: true },
+  { mod: "Employees", a: true, h: true, e: false },
+  { mod: "Payroll", a: true, h: true, e: false },
+  { mod: "Settings", a: true, h: false, e: false },
+];
+
 export function LandingPage({ onSelect }: Props) {
   const { theme, toggle } = useTheme();
 
   return (
     <main className="landing-page">
-      <button
-        className="landing-theme-toggle"
-        onClick={toggle}
-        aria-label="Toggle dark mode"
-      >
-        {theme === "light" ? "☾" : "☀"}
-      </button>
+      <header className="landing-topbar">
+        <div className="landing-brand">
+          <span className="landing-brand-mark">◌</span>
+          <div>
+            <strong>WorkNest</strong>
+            <small>ERP · POS · HRM</small>
+          </div>
+        </div>
+        <div className="landing-topbar-actions">
+          <span className="landing-topbar-tag">Private operator workspace</span>
+          <button
+            className="landing-theme-toggle"
+            onClick={toggle}
+            aria-label="Toggle dark mode"
+          >
+            {theme === "light" ? "☾" : "☀"}
+          </button>
+        </div>
+      </header>
 
-      <div className="landing-hero">
-        <div className="landing-hero-mark">◌</div>
+      <section className="landing-hero">
+        <span className="landing-hero-badge">
+          <span className="landing-hero-badge-dot" />
+          Billing, inventory &amp; people in one place
+        </span>
+        <span className="landing-hero-mark">◌</span>
         <h1 className="landing-hero-title">WorkNest</h1>
         <p className="landing-hero-tagline">
-          The complete ERP, POS & HRM platform
+          The complete ERP, POS &amp; HRM platform
         </p>
         <p className="landing-hero-sub">
           One system for sales, inventory, branches, employees, and payroll.
           Choose your role to enter the workspace.
         </p>
-      </div>
+        <div className="landing-hero-stats">
+          <div className="landing-hero-stat">
+            <strong>9</strong>
+            <span>Modules</span>
+          </div>
+          <div className="landing-hero-stat">
+            <strong>3</strong>
+            <span>Roles</span>
+          </div>
+          <div className="landing-hero-stat">
+            <strong>1</strong>
+            <span>Workspace</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-highlights">
+        {highlights.map((item) => (
+          <article className="highlight-card" key={item.title}>
+            <span className="highlight-icon">{item.icon}</span>
+            <h3>{item.title}</h3>
+            <p>{item.desc}</p>
+          </article>
+        ))}
+      </section>
 
       <section className="landing-roles">
         <div className="landing-section-header">
@@ -195,21 +265,13 @@ export function LandingPage({ onSelect }: Props) {
         <div className="permissions-table">
           <div className="permissions-row permissions-head">
             <span>Module</span>
-            <span>Admin</span>
-            <span>HR</span>
-            <span>Employee</span>
+            <span className="permissions-role permissions-role-admin">Admin</span>
+            <span className="permissions-role permissions-role-hr">HR</span>
+            <span className="permissions-role permissions-role-employee">
+              Employee
+            </span>
           </div>
-          {[
-            { mod: "Point of Sale", a: true, h: false, e: true },
-            { mod: "Dashboard", a: true, h: true, e: true },
-            { mod: "Inventory", a: true, h: false, e: true },
-            { mod: "Branches", a: true, h: false, e: true },
-            { mod: "Reports", a: true, h: true, e: true },
-            { mod: "Customers", a: true, h: true, e: true },
-            { mod: "Employees", a: true, h: true, e: false },
-            { mod: "Payroll", a: true, h: true, e: false },
-            { mod: "Settings", a: true, h: false, e: false },
-          ].map((row) => (
+          {permissionRows.map((row) => (
             <div className="permissions-row" key={row.mod}>
               <span className="permissions-mod">{row.mod}</span>
               <span className={row.a ? "perm-yes" : "perm-no"}>
@@ -227,10 +289,15 @@ export function LandingPage({ onSelect }: Props) {
       </section>
 
       <footer className="landing-footer">
-        <span className="landing-footer-mark">◌</span>
-        <span>WorkNest ERP System</span>
-        <span className="landing-footer-dot" />
-        <span>Powered by Quibble Byte</span>
+        <div className="landing-footer-brand">
+          <span className="landing-footer-mark">◌</span>
+          <strong>WorkNest ERP System</strong>
+        </div>
+        <div className="landing-footer-meta">
+          <span>Powered by Quibble Byte</span>
+          <span className="landing-footer-dot" />
+          <span>Private operator workspace</span>
+        </div>
       </footer>
     </main>
   );

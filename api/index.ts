@@ -1,22 +1,20 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import app, { connectDB } from "../server";
+import type { Request, Response } from "express";
+import app from "../server/app";
 
-export default async function handler(
+/**
+ * Vercel serverless entry point.
+ *
+ * The whole Express app lives in `../server` and is mounted here as a single
+ * function. `vercel.json` rewrites every `/api/*` request to this handler while
+ * keeping the original URL, so Express routes such as `/api/products` match.
+ */
+export default function handler(
   request: IncomingMessage,
   response: ServerResponse,
-) {
-  try {
-    await connectDB();
-  } catch (error) {
-    response.statusCode = 500;
-    response.setHeader("Content-Type", "application/json");
-    response.end(
-      JSON.stringify({
-        error:
-          error instanceof Error ? error.message : "Database connection failed",
-      }),
-    );
-    return;
-  }
-  app(request, response);
+): void {
+  app(
+    request as unknown as Request,
+    response as unknown as Response,
+  );
 }
