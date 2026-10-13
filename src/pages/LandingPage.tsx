@@ -1,4 +1,5 @@
 import { useTheme } from "../hooks/useTheme";
+import { BrandLogo } from "../components/BrandLogo";
 
 type RoleChoice = "admin" | "hr" | "employee";
 
@@ -135,33 +136,24 @@ export function LandingPage({ onSelect }: Props) {
 
   return (
     <main className="landing-page">
-      <header className="landing-topbar">
-        <div className="landing-brand">
-          <span className="landing-brand-mark">◌</span>
-          <div>
-            <strong>WorkNest</strong>
-            <small>ERP · POS · HRM</small>
-          </div>
-        </div>
-        <div className="landing-topbar-actions">
-          <span className="landing-topbar-tag">Private operator workspace</span>
-          <button
-            className="landing-theme-toggle"
-            onClick={toggle}
-            aria-label="Toggle dark mode"
-          >
-            {theme === "light" ? "☾" : "☀"}
-          </button>
-        </div>
-      </header>
+      <button
+        className="landing-theme-toggle"
+        onClick={toggle}
+        aria-label="Toggle dark mode"
+      >
+        {theme === "light" ? "☾" : "☀"}
+      </button>
 
       <section className="landing-hero">
         <span className="landing-hero-badge">
           <span className="landing-hero-badge-dot" />
           Billing, inventory &amp; people in one place
         </span>
-        <span className="landing-hero-mark">◌</span>
-        <h1 className="landing-hero-title">WorkNest</h1>
+        <h1 className="sr-only">WorkNest</h1>
+        <BrandLogo
+          className="landing-hero-logo"
+          alt="WorkNest — ERP, POS & HRM"
+        />
         <p className="landing-hero-tagline">
           The complete ERP, POS &amp; HRM platform
         </p>
@@ -290,8 +282,8 @@ export function LandingPage({ onSelect }: Props) {
 
       <footer className="landing-footer">
         <div className="landing-footer-brand">
-          <span className="landing-footer-mark">◌</span>
-          <strong>WorkNest ERP System</strong>
+          <BrandLogo className="landing-footer-logo" />
+          <strong>ERP System</strong>
         </div>
         <div className="landing-footer-meta">
           <span>Powered by Quibble Byte</span>

@@ -3,6 +3,7 @@ import type { BranchForm } from "../types";
 import { useStore } from "../context/StoreContext";
 import { useAuth } from "../context/AuthContext";
 import { Button } from "../components/Button";
+import { BrandLogo } from "../components/BrandLogo";
 
 const emptyForm: BranchForm = {
   name: "",
@@ -27,8 +28,7 @@ export function BranchEntryPage() {
     <main className="entry-page">
       <header className="entry-topbar">
         <div className="entry-brand">
-          <span className="brand-mark">◌</span>
-          <strong>WorkNest</strong>
+          <BrandLogo className="entry-brand-logo" />
           <small>POS AND ERP</small>
         </div>
         <button

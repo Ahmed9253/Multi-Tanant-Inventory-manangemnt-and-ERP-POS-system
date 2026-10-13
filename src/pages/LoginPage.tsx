@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../hooks/useTheme";
 import { Button } from "../components/Button";
+import { BrandLogo } from "../components/BrandLogo";
 
 type LoginRole = "admin" | "hr" | "employee";
 
@@ -64,8 +65,7 @@ export function LoginPage({ role, onBack }: Props) {
       </button>
       <div className="login-card">
         <div className="login-brand">
-          <span className="brand-mark">◌</span>
-          <strong>WorkNest</strong>
+          <BrandLogo className="login-brand-logo" />
           <small>ERP</small>
         </div>
         <form onSubmit={handleSubmit} className="login-form">

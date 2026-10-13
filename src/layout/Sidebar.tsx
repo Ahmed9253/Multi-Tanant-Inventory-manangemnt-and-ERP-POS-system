@@ -2,6 +2,7 @@ import { useStore } from "../context/StoreContext";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../hooks/useTheme";
 import { getNavGroupsForRole } from "../lib/constants";
+import { BrandLogo } from "../components/BrandLogo";
 import type { View } from "../types";
 
 type Props = {
@@ -18,7 +19,7 @@ export function Sidebar({ view, setView }: Props) {
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
-        <span className="brand-mark">◌</span>
+        <BrandLogo className="sidebar-brand-logo" />
         <div>
           <strong>{settings.storeName}</strong>
           <small>ERP System</small>
