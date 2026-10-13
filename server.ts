@@ -7,7 +7,7 @@ export const app = express();
 export default app;
 const port = Number(process.env.PORT || 4000);
 const mongoUri =
-  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/tillora_pos";
+  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/worknest_pos";
 
 app.use(cors());
 app.use(express.json());
@@ -53,9 +53,64 @@ const branchSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
+const customerSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    email: String,
+    phone: String,
+    notes: String,
+  },
+  { timestamps: true },
+);
+const appSettingsSchema = new mongoose.Schema({
+  taxRate: { type: Number, default: 0.08 },
+  storeName: { type: String, default: "WorkNest" },
+  currency: { type: String, default: "$" },
+});
+const employeeSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    phone: String,
+    role: {
+      type: String,
+      enum: ["hr", "cashier", "manager"],
+      default: "cashier",
+    },
+    department: String,
+    position: String,
+    salary: { type: Number, default: 0 },
+    hireDate: { type: Date, default: Date.now },
+    status: {
+      type: String,
+      enum: ["active", "inactive"],
+      default: "active",
+    },
+  },
+  { timestamps: true },
+);
+const payrollSchema = new mongoose.Schema(
+  {
+    employeeId: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
+    employeeName: String,
+    month: String,
+    baseSalary: Number,
+    bonus: { type: Number, default: 0 },
+    deductions: { type: Number, default: 0 },
+    netPay: Number,
+    status: { type: String, enum: ["pending", "paid"], default: "pending" },
+    paidAt: Date,
+  },
+  { timestamps: true },
+);
 const Product = mongoose.model("Product", productSchema);
 const Sale = mongoose.model("Sale", saleSchema);
 const Branch = mongoose.model("Branch", branchSchema);
+const Customer = mongoose.model("Customer", customerSchema);
+const AppSettings = mongoose.model("AppSettings", appSettingsSchema);
+const Employee = mongoose.model("Employee", employeeSchema);
+const Payroll = mongoose.model("Payroll", payrollSchema);
 const settingSchema = new mongoose.Schema({
   key: { type: String, unique: true },
   value: mongoose.Schema.Types.Mixed,
@@ -236,6 +291,196 @@ app.post("/api/sales", async (request, response) => {
   response.status(201).json(sale);
 });
 
+app.get("/api/customers", async (_request, response) =>
+  response.json(await Customer.find().sort({ name: 1 })),
+);
+app.post("/api/customers", async (request, response) => {
+  const customer = await Customer.create({
+    name: request.body.name,
+    email: request.body.email || undefined,
+    phone: request.body.phone || undefined,
+    notes: request.body.notes || undefined,
+  });
+  response.status(201).json(customer);
+});
+app.patch("/api/customers/:id", async (request, response) => {
+  const customer = await Customer.findByIdAndUpdate(
+    request.params.id,
+    request.body,
+    { new: true, runValidators: true },
+  );
+  if (!customer)
+    return response.status(404).json({ error: "Customer not found" });
+  response.json(customer);
+});
+app.delete("/api/customers/:id", async (request, response) => {
+  const customer = await Customer.findByIdAndDelete(request.params.id);
+  if (!customer)
+    return response.status(404).json({ error: "Customer not found" });
+  response.status(204).send();
+});
+
+app.get("/api/settings", async (_request, response) => {
+  const [settings] = await AppSettings.find().limit(1);
+  response.json(
+    settings || { taxRate: 0.08, storeName: "WorkNest", currency: "$" },
+  );
+});
+app.patch("/api/settings", async (request, response) => {
+  const [existing] = await AppSettings.find().limit(1);
+  const settings = existing
+    ? await Object.assign(existing, request.body).save()
+    : await AppSettings.create(request.body);
+  response.json(settings);
+});
+
+app.post("/api/auth/login", async (request, response) => {
+  const { email, password, loginType } = request.body;
+
+  if (loginType === "admin" || (!loginType && email === process.env.ADMIN_EMAIL)) {
+    if (
+      email === process.env.ADMIN_EMAIL &&
+      password === process.env.ADMIN_PASSWORD
+    ) {
+      return response.json({
+        id: "admin",
+        name: "Administrator",
+        email,
+        role: "admin",
+      });
+    }
+    if (loginType === "admin")
+      return response.status(401).json({ error: "Invalid admin credentials" });
+  }
+
+  const employee = await Employee.findOne({
+    email,
+    password,
+    status: "active",
+  });
+  if (!employee)
+    return response.status(401).json({ error: "Invalid credentials" });
+
+  if (loginType === "hr" && employee.role !== "hr")
+    return response.status(403).json({ error: "Not an HR account" });
+
+  response.json({
+    id: employee._id,
+    name: employee.name,
+    email: employee.email,
+    role: employee.role,
+  });
+});
+
+app.get("/api/employees", async (_request, response) =>
+  response.json(await Employee.find().sort({ name: 1 })),
+);
+app.post("/api/employees", async (request, response) => {
+  const employee = await Employee.create({
+    name: request.body.name,
+    email: request.body.email,
+    password: request.body.password,
+    phone: request.body.phone || undefined,
+    role: request.body.role || "cashier",
+    department: request.body.department || undefined,
+    position: request.body.position || undefined,
+    salary: Number(request.body.salary) || 0,
+    hireDate: request.body.hireDate || new Date(),
+    status: request.body.status || "active",
+  });
+  response.status(201).json(employee);
+});
+app.patch("/api/employees/:id", async (request, response) => {
+  const employee = await Employee.findByIdAndUpdate(
+    request.params.id,
+    request.body,
+    { new: true, runValidators: true },
+  );
+  if (!employee)
+    return response.status(404).json({ error: "Employee not found" });
+  response.json(employee);
+});
+app.delete("/api/employees/:id", async (request, response) => {
+  const employee = await Employee.findByIdAndDelete(request.params.id);
+  if (!employee)
+    return response.status(404).json({ error: "Employee not found" });
+  response.status(204).send();
+});
+
+app.get("/api/payroll", async (_request, response) =>
+  response.json(await Payroll.find().sort({ createdAt: -1 })),
+);
+app.post("/api/payroll", async (request, response) => {
+  const payroll = await Payroll.create({
+    employeeId: request.body.employeeId,
+    employeeName: request.body.employeeName,
+    month: request.body.month,
+    baseSalary: Number(request.body.baseSalary) || 0,
+    bonus: Number(request.body.bonus) || 0,
+    deductions: Number(request.body.deductions) || 0,
+    netPay:
+      (Number(request.body.baseSalary) || 0) +
+      (Number(request.body.bonus) || 0) -
+      (Number(request.body.deductions) || 0),
+    status: "pending",
+  });
+  response.status(201).json(payroll);
+});
+app.patch("/api/payroll/:id", async (request, response) => {
+  const existing = await Payroll.findById(request.params.id);
+  if (!existing)
+    return response.status(404).json({ error: "Payroll record not found" });
+  const bonus =
+    request.body.bonus !== undefined
+      ? Number(request.body.bonus)
+      : existing.bonus;
+  const deductions =
+    request.body.deductions !== undefined
+      ? Number(request.body.deductions)
+      : existing.deductions;
+  const patch = {
+    ...request.body,
+    netPay: existing.baseSalary + bonus - deductions,
+  };
+  if (request.body.status === "paid" && !existing.paidAt)
+    patch.paidAt = new Date();
+  const payroll = await Payroll.findByIdAndUpdate(
+    request.params.id,
+    patch,
+    { new: true },
+  );
+  response.json(payroll);
+});
+app.delete("/api/payroll/:id", async (request, response) => {
+  const payroll = await Payroll.findByIdAndDelete(request.params.id);
+  if (!payroll)
+    return response.status(404).json({ error: "Payroll record not found" });
+  response.status(204).send();
+});
+app.post("/api/payroll/generate", async (request, response) => {
+  const month = request.body.month;
+  const employees = await Employee.find({ status: "active" });
+  const existing = await Payroll.find({ month });
+  const existingIds = new Set(existing.map((p) => String(p.employeeId)));
+  const created = [];
+  for (const emp of employees) {
+    if (existingIds.has(String(emp._id))) continue;
+    created.push(
+      await Payroll.create({
+        employeeId: emp._id,
+        employeeName: emp.name,
+        month,
+        baseSalary: emp.salary,
+        bonus: 0,
+        deductions: 0,
+        netPay: emp.salary,
+        status: "pending",
+      }),
+    );
+  }
+  response.status(201).json({ generated: created.length });
+});
+
 let dbConnectionPromise: Promise<void> | null = null;
 
 export function connectDB(): Promise<void> {
@@ -255,8 +500,14 @@ export function connectDB(): Promise<void> {
 }
 
 export async function start() {
-  await connectDB();
   app.listen(port, () =>
-    console.log(`Trello POS API running on http://localhost:${port}`),
+    console.log(`WorkNest POS API running on http://localhost:${port}`),
   );
+  connectDB().catch((error) => {
+    console.warn(
+      "Could not connect to MongoDB:",
+      error?.message || error,
+    );
+    console.warn("Server is running but database features are unavailable.");
+  });
 }

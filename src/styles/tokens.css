@@ -1,0 +1,75 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap");
+
+:root {
+  --ink: #202321;
+  --muted: #777b75;
+  --line: #dedfd8;
+  --paper: #f8f8f4;
+  --cream: #eeeee8;
+  --white: #fff;
+
+  --green: #143f35;
+  --lime: #d8ef6c;
+  --green-soft: #e5efe4;
+  --green-tint: #f0f5ef;
+
+  --accent-warn: #b36d42;
+  --accent-warn-bg: #fff8e6;
+  --accent-warn-border: #ead49b;
+  --accent-warn-icon-bg: #f3df9f;
+  --accent-warn-icon: #755b17;
+  --accent-danger: #a44f4f;
+  --accent-danger-border: #d5a0a0;
+  --accent-danger-bg: #fff0f0;
+  --accent-ok: #66925a;
+  --accent-info: #4a6a8a;
+
+  --shadow-xs: 0 1px 2px rgba(20, 63, 53, 0.04);
+  --shadow-sm: 0 2px 8px rgba(20, 63, 53, 0.06);
+  --shadow-md: 0 8px 24px rgba(20, 63, 53, 0.08);
+  --shadow-lg: 0 20px 70px rgba(20, 63, 53, 0.12);
+  --shadow-xl: 0 28px 90px rgba(20, 63, 53, 0.18);
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+
+  --transition: 0.2s ease;
+  --transition-slow: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+  --focus-ring: 0 0 0 3px rgba(20, 63, 53, 0.12);
+}
+
+html[data-theme="dark"] {
+  --ink: #edf1e9;
+  --muted: #9aa59b;
+  --line: #35443d;
+  --paper: #101714;
+  --cream: #1b2822;
+  --green: #8ed1ae;
+  --lime: #18261f;
+  --white: #17211d;
+  --green-soft: #1b2822;
+  --green-tint: #1b2822;
+
+  --accent-warn: #d9a96b;
+  --accent-warn-bg: #302719;
+  --accent-warn-border: #745f2b;
+  --accent-warn-icon-bg: #4a3c1a;
+  --accent-warn-icon: #d9a96b;
+  --accent-danger: #d68585;
+  --accent-danger-border: #5a3030;
+  --accent-danger-bg: #2a1818;
+  --accent-ok: #8ed1ae;
+  --accent-info: #7fa8c8;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 20px 70px rgba(0, 0, 0, 0.35);
+  --shadow-xl: 0 28px 90px rgba(0, 0, 0, 0.45);
+
+  --focus-ring: 0 0 0 3px rgba(142, 209, 174, 0.2);
+  color-scheme: dark;
+}

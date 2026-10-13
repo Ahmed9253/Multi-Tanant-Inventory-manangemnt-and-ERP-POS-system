@@ -1,10 +1,10 @@
-# Trello POS and ERP
+# WorkNest POS and ERP
 
-Trello is a branch-first point of sale and operations workspace created by Quibble Byte. It is designed for a trusted store operator who needs checkout, inventory, branches, sales reporting, and MongoDB persistence in one focused application.
+WorkNest is a branch-first point of sale and operations workspace created by Quibble Byte. It is designed for a trusted store operator who needs checkout, inventory, branches, sales reporting, and MongoDB persistence in one focused application.
 
 ## First launch
 
-Trello starts from the customer workspace, not from demo data.
+WorkNest starts from the customer workspace, not from demo data.
 
 1. Start the frontend and API.
 2. Open the browser at `http://localhost:5173`.
@@ -78,7 +78,7 @@ There are no seeded products, sample sales, or hardcoded main branch records. Ne
 
 ### Interface
 
-- Trello POS and ERP branding
+- WorkNest POS and ERP branding
 - Quibble Byte footer credit
 - Light and dark theme
 - Local date and time display
@@ -88,7 +88,7 @@ There are no seeded products, sample sales, or hardcoded main branch records. Ne
 
 ## Keyboard controls
 
-Trello detects the operating system and displays the correct shortcut labels.
+WorkNest detects the operating system and displays the correct shortcut labels.
 
 | Action                | macOS         | Windows and Linux |
 | --------------------- | ------------- | ----------------- |

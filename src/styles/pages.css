@@ -1,0 +1,439 @@
+/* ---- Module page shared ---- */
+.module-page {
+  width: min(1370px, 91vw);
+  margin: 0 auto;
+  padding: 65px 0 75px;
+  flex: 1;
+}
+.module-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+}
+.module-heading h1 {
+  margin: 0;
+  font-size: clamp(30px, 4vw, 46px);
+  letter-spacing: -2px;
+}
+.subheading {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ---- Dashboard ---- */
+.dashboard {
+  width: min(1370px, 91vw);
+  margin: 0 auto;
+  padding: 65px 0 75px;
+  flex: 1;
+}
+.dashboard-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+.dashboard-heading h1 {
+  margin: 0;
+  font-size: clamp(30px, 4vw, 46px);
+  letter-spacing: -2px;
+}
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-top: 43px;
+}
+.dashboard-columns {
+  display: grid;
+  grid-template-columns: 1.55fr 1fr;
+  gap: 55px;
+  margin-top: 55px;
+}
+.data-section .section-heading h2 {
+  margin: 0;
+  font-size: 23px;
+  letter-spacing: -1px;
+}
+.attention-section {
+  border-left: 1px solid var(--line);
+  padding-left: 35px;
+}
+.attention-section h2 {
+  margin: 0;
+  font-size: 23px;
+  letter-spacing: -1px;
+}
+
+/* ---- Inventory ---- */
+.inventory-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin: 42px 0 30px;
+}
+.inventory-summary > div {
+  padding: 21px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  transition: box-shadow var(--transition);
+}
+.inventory-summary > div:hover {
+  box-shadow: var(--shadow-sm);
+}
+.inventory-summary span,
+.inventory-summary strong {
+  display: block;
+}
+.inventory-summary span {
+  color: var(--muted);
+  font-size: 11px;
+}
+.inventory-summary strong {
+  margin-top: 12px;
+  font-size: 25px;
+  letter-spacing: -1px;
+}
+.summary-warning {
+  background: var(--accent-warn-bg) !important;
+  border-color: var(--accent-warn-border) !important;
+}
+.inventory-toolbar {
+  display: flex;
+  gap: 9px;
+  margin-bottom: 20px;
+}
+.inventory-toolbar .search-box {
+  height: 43px;
+}
+.filter-select {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0 12px;
+  background: var(--white);
+  color: var(--ink);
+  font-size: 12px;
+  height: 43px;
+  cursor: pointer;
+}
+
+/* ---- Reports ---- */
+.report-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin: 42px 0 30px;
+}
+.report-summary > div {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--white);
+}
+.report-summary span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}
+.report-summary strong {
+  display: block;
+  margin-top: 10px;
+  font-size: 25px;
+  letter-spacing: -1px;
+}
+.report-notes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}
+.report-notes > div {
+  padding: 17px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+.report-notes strong {
+  font-size: 11px;
+}
+.report-notes p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* ---- Branches ---- */
+.branch-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 42px 0 52px;
+  padding: 28px 32px;
+  border-radius: var(--radius-lg);
+  background: var(--green);
+  color: #edf5df;
+}
+.hero-kicker {
+  display: block;
+  color: #a8c09f;
+  font: 10px "DM Mono", monospace;
+  letter-spacing: 1px;
+}
+.branch-hero strong {
+  display: block;
+  margin-top: 10px;
+  font-size: 38px;
+}
+.branch-hero strong small {
+  color: #a8c09f;
+  font-size: 12px;
+  font-weight: 500;
+}
+.branch-hero p {
+  margin: 6px 0 0;
+  color: #b8c9b6;
+  font-size: 12px;
+}
+.network-icon {
+  font-size: 80px;
+  color: var(--lime);
+}
+.branch-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.no-branches {
+  grid-column: 1 / -1;
+  padding: 70px 20px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+.no-branches > span {
+  color: var(--green);
+  font-size: 42px;
+}
+.no-branches h2 {
+  margin: 14px 0 6px;
+  font-size: 22px;
+}
+.no-branches p {
+  margin: 0 auto 22px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* ---- Customers ---- */
+.customer-head {
+  grid-template-columns: 1.4fr 1.4fr 1fr 2fr 0.8fr !important;
+}
+.customer-row {
+  grid-template-columns: 1.4fr 1.4fr 1fr 2fr 0.8fr !important;
+}
+.customer-notes {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* ---- Settings ---- */
+.settings-card {
+  margin-top: 42px;
+  padding: 32px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+  max-width: 640px;
+}
+.settings-section {
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 28px;
+}
+.settings-section:last-of-type {
+  border-bottom: 0;
+  margin-bottom: 20px;
+}
+.settings-section h2 {
+  margin: 0 0 18px;
+  font-size: 20px;
+  letter-spacing: -1px;
+}
+.settings-section label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--muted);
+  font: 10px "DM Mono", monospace;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.settings-section input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 11px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 12px Manrope, sans-serif;
+  text-transform: none;
+}
+.settings-hint {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+  text-transform: none !important;
+}
+.settings-save {
+  justify-content: space-between;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+  .dashboard-columns {
+    grid-template-columns: 1fr;
+    gap: 45px;
+  }
+  .attention-section {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding: 35px 0 0;
+  }
+  .inventory-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .branch-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 700px) {
+  .report-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .spreadsheet-card {
+    overflow-x: auto;
+  }
+  .spreadsheet {
+    min-width: 650px;
+  }
+  .report-notes {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 550px) {
+  .module-page,
+  .dashboard {
+    padding-top: 40px;
+  }
+  .module-heading,
+  .dashboard-heading {
+    align-items: start;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .metric-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .metric-card {
+    padding: 15px;
+  }
+  .metric-card strong {
+    font-size: 22px;
+  }
+  .inventory-toolbar {
+    flex-wrap: wrap;
+  }
+  .inventory-toolbar .search-box {
+    flex-basis: 100%;
+  }
+  .inventory-table {
+    overflow-x: auto;
+  }
+  .inventory-table-head,
+  .inventory-row {
+    min-width: 720px;
+  }
+  .branch-grid {
+    grid-template-columns: 1fr;
+  }
+  .branch-hero {
+    margin-top: 30px;
+  }
+  .network-icon {
+    font-size: 55px;
+  }
+  .table-head,
+  .table-row {
+    grid-template-columns: 1.4fr 0.8fr 0.7fr;
+  }
+  .table-head span:nth-child(3),
+  .table-row span:nth-child(3) {
+    display: none;
+  }
+}
+
+/* ---- Employees page ---- */
+.employee-head {
+  grid-template-columns: 1.5fr 0.8fr 1fr 0.8fr 0.7fr 0.8fr;
+}
+.employee-row {
+  grid-template-columns: 1.5fr 0.8fr 1fr 0.8fr 0.7fr 0.8fr;
+  align-items: center;
+}
+.employee-name-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.employee-name-cell small {
+  color: var(--muted);
+  font: 10px "DM Mono", monospace;
+}
+
+/* ---- Payroll page ---- */
+.payroll-actions {
+  display: flex;
+  gap: 8px;
+}
+.payroll-generate-bar {
+  margin-top: 20px;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.payroll-generate-bar label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font: 10px "DM Mono", monospace;
+  text-transform: uppercase;
+}
+.payroll-generate-bar input {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 7px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 12px Manrope, sans-serif;
+}
+.payroll-head {
+  grid-template-columns: 1.2fr 0.8fr 0.7fr 0.6fr 0.7fr 0.7fr 0.6fr 0.8fr;
+}
+.payroll-row {
+  grid-template-columns: 1.2fr 0.8fr 0.7fr 0.6fr 0.7fr 0.7fr 0.6fr 0.8fr;
+  align-items: center;
+}
+.payroll-bonus {
+  color: var(--accent-ok);
+}
+.payroll-deduction {
+  color: var(--accent-warn);
+}
