@@ -224,6 +224,9 @@ html[data-theme="dark"] .theme-toggle-switch .theme-toggle-icon.moon {
   object-fit: contain;
   flex-shrink: 0;
 }
+html[data-theme="dark"] .brand-logo {
+  filter: brightness(1.25) saturate(1.05);
+}
 .sidebar-brand-logo {
   height: 30px;
 }
