@@ -32,7 +32,9 @@
 }
 .sidebar-brand small {
   color: var(--muted);
-  font: 9px "DM Mono", monospace;
+  font:
+    9px "DM Mono",
+    monospace;
   letter-spacing: 1px;
 }
 .sidebar-nav {
@@ -47,7 +49,9 @@
   margin: 0 0 6px;
   padding: 0 8px;
   color: var(--muted);
-  font: 600 9px "DM Mono", monospace;
+  font:
+    600 9px "DM Mono",
+    monospace;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -64,7 +68,9 @@
   font-weight: 600;
   color: var(--ink);
   text-align: left;
-  transition: background var(--transition), color var(--transition);
+  transition:
+    background var(--transition),
+    color var(--transition);
 }
 .sidebar-item:hover {
   background: var(--cream);
@@ -101,7 +107,9 @@
 .theme-toggle-icon {
   font-size: 14px;
   z-index: 1;
-  transition: opacity var(--transition), color var(--transition);
+  transition:
+    opacity var(--transition),
+    color var(--transition);
 }
 .theme-toggle-icon.sun {
   color: var(--accent-warn);
@@ -116,7 +124,9 @@
   height: 24px;
   border-radius: 12px;
   background: var(--green);
-  transition: transform var(--transition), left var(--transition);
+  transition:
+    transform var(--transition),
+    left var(--transition);
   top: 50%;
   transform: translateY(-50%);
 }
@@ -151,7 +161,9 @@ html[data-theme="dark"] .theme-toggle-switch .theme-toggle-icon.moon {
   height: 34px;
   display: grid;
   place-items: center;
-  font: 500 11px "DM Mono", monospace;
+  font:
+    500 11px "DM Mono",
+    monospace;
   flex-shrink: 0;
 }
 .sidebar-user strong {
@@ -160,7 +172,9 @@ html[data-theme="dark"] .theme-toggle-switch .theme-toggle-icon.moon {
 }
 .sidebar-user small {
   color: var(--muted);
-  font: 9px "DM Mono", monospace;
+  font:
+    9px "DM Mono",
+    monospace;
   text-transform: uppercase;
 }
 
@@ -189,7 +203,9 @@ html[data-theme="dark"] .theme-toggle-switch .theme-toggle-icon.moon {
 }
 .entry-loading span:last-child {
   color: var(--muted);
-  font: 10px "DM Mono", monospace;
+  font:
+    10px "DM Mono",
+    monospace;
 }
 
 /* ---- Topbar ---- */
@@ -294,7 +310,9 @@ html[data-theme="dark"] .brand-logo {
 .branch-switcher button small {
   margin-left: auto;
   color: var(--muted);
-  font: 9px "DM Mono", monospace;
+  font:
+    9px "DM Mono",
+    monospace;
 }
 .branch-switcher button:hover,
 .branch-switcher button.active {
@@ -327,12 +345,16 @@ html[data-theme="dark"] .brand-logo {
   color: var(--lime);
   width: 34px;
   height: 34px;
-  font: 500 11px "DM Mono", monospace;
+  font:
+    500 11px "DM Mono",
+    monospace;
   cursor: pointer;
 }
 .live-clock {
   color: var(--muted);
-  font: 10px "DM Mono", monospace;
+  font:
+    10px "DM Mono",
+    monospace;
   white-space: nowrap;
 }
 
@@ -365,7 +387,9 @@ html[data-theme="dark"] .brand-logo {
 }
 .user-info small {
   color: var(--muted);
-  font: 10px "DM Mono", monospace;
+  font:
+    10px "DM Mono",
+    monospace;
 }
 .user-menu-item {
   width: 100%;
@@ -407,7 +431,9 @@ html[data-theme="dark"] .brand-logo {
 }
 .login-brand small {
   color: var(--muted);
-  font: 9px "DM Mono", monospace;
+  font:
+    9px "DM Mono",
+    monospace;
   letter-spacing: 1px;
   padding: 2px 5px;
   border: 1px solid var(--line);
@@ -429,7 +455,9 @@ html[data-theme="dark"] .brand-logo {
   gap: 6px;
   margin-top: 14px;
   color: var(--muted);
-  font: 10px "DM Mono", monospace;
+  font:
+    10px "DM Mono",
+    monospace;
   text-transform: uppercase;
 }
 .login-form input {
@@ -438,7 +466,9 @@ html[data-theme="dark"] .brand-logo {
   padding: 11px;
   background: var(--paper);
   color: var(--ink);
-  font: 13px Manrope, sans-serif;
+  font:
+    13px Manrope,
+    sans-serif;
   text-transform: none;
   outline-color: var(--green);
 }
@@ -463,7 +493,9 @@ html[data-theme="dark"] .brand-logo {
   cursor: pointer;
   z-index: 10;
   color: var(--ink);
-  transition: background var(--transition), border-color var(--transition);
+  transition:
+    background var(--transition),
+    border-color var(--transition);
 }
 .login-theme-toggle:hover {
   background: var(--cream);
@@ -490,157 +522,172 @@ html[data-theme="dark"] .brand-logo {
 .landing-page {
   min-height: 100vh;
   background: var(--paper);
-  padding: 0 24px 40px;
+  padding: 0 clamp(16px, 4vw, 36px) clamp(48px, 8vw, 84px);
   position: relative;
   overflow-y: auto;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
 }
 
 /* Floating theme toggle */
 .landing-theme-toggle {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 10;
+  top: clamp(16px, 3vw, 24px);
+  right: clamp(16px, 3vw, 24px);
+  z-index: 50;
   border: 1px solid var(--line);
   border-radius: 50%;
   background: var(--white);
   width: 40px;
   height: 40px;
-  font-size: 17px;
+  font-size: 16px;
   cursor: pointer;
   color: var(--ink);
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  transition: background var(--transition), border-color var(--transition);
+  box-shadow: var(--shadow-xs);
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    transform var(--transition),
+    box-shadow var(--transition);
 }
 .landing-theme-toggle:hover {
   background: var(--cream);
   border-color: var(--green);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+.landing-theme-toggle:active {
+  transform: scale(0.95);
 }
 
 /* Hero */
 .landing-hero {
   text-align: center;
-  max-width: 720px;
-  margin: 56px auto;
-}
-.landing-hero-badge {
-  display: inline-flex;
+  width: min(840px, 100%);
+  margin: clamp(40px, 7vw, 76px) auto clamp(48px, 8vw, 80px);
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  border: 1px solid var(--line);
-  background: var(--white);
-  border-radius: 20px;
-  padding: 7px 14px;
-  color: var(--muted);
-  font: 10px "DM Mono", monospace;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-bottom: 26px;
-}
-.landing-hero-badge-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #77a754;
 }
 .landing-hero-logo {
   display: block;
-  width: clamp(230px, 38vw, 340px);
+  width: clamp(220px, 32vw, 320px);
   height: auto;
-  margin: 0 auto 18px;
+  margin: 0 auto clamp(16px, 2.5vw, 24px);
 }
 .landing-hero-tagline {
-  margin: 16px 0 0;
-  font-size: 20px;
-  font-weight: 700;
+  margin: 0 0 clamp(10px, 1.8vw, 16px);
+  font-size: clamp(26px, 4.2vw, 42px);
+  font-weight: 800;
   color: var(--ink);
-  letter-spacing: -0.5px;
+  letter-spacing: -0.035em;
+  line-height: 1.16;
 }
 .landing-hero-sub {
-  margin: 12px auto 0;
-  max-width: 560px;
+  margin: 0 auto;
+  width: min(600px, 100%);
   color: var(--muted);
-  font-size: 14px;
-  line-height: 1.7;
+  font-size: clamp(14px, 1.3vw, 16px);
+  font-weight: 500;
+  line-height: 1.65;
 }
 .landing-hero-stats {
   display: flex;
-  max-width: 520px;
-  margin: 34px auto 0;
+  width: min(560px, 100%);
+  margin: clamp(28px, 4.5vw, 40px) auto 0;
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
   background: var(--white);
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-xs);
 }
 .landing-hero-stat {
   flex: 1;
-  padding: 18px 12px;
+  padding: clamp(14px, 2vw, 20px) clamp(10px, 1.6vw, 16px);
+  text-align: center;
   border-right: 1px solid var(--line);
+  transition: background var(--transition);
 }
 .landing-hero-stat:last-child {
   border-right: 0;
 }
+.landing-hero-stat:hover {
+  background: var(--cream);
+}
 .landing-hero-stat strong {
   display: block;
-  font-size: 24px;
+  font-size: clamp(24px, 3.2vw, 30px);
   font-weight: 800;
-  letter-spacing: -1px;
+  letter-spacing: -0.04em;
   color: var(--ink);
+  line-height: 1.1;
 }
 .landing-hero-stat span {
+  display: block;
+  margin-top: 4px;
   color: var(--muted);
-  font: 9px "DM Mono", monospace;
+  font:
+    600 10px "DM Mono",
+    monospace;
   text-transform: uppercase;
-  letter-spacing: 1.2px;
+  letter-spacing: 0.12em;
 }
 
 /* Highlights */
 .landing-highlights {
-  max-width: 1100px;
-  margin: 0 auto 64px;
+  width: min(1160px, 100%);
+  margin: 0 auto clamp(52px, 7vw, 84px);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: clamp(16px, 2.2vw, 24px);
 }
 .highlight-card {
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   background: var(--white);
-  padding: 20px 22px;
+  padding: clamp(20px, 2.6vw, 26px);
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  transition: border-color var(--transition), box-shadow var(--transition);
+  gap: 10px;
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition),
+    transform var(--transition);
 }
 .highlight-card:hover {
   border-color: var(--green);
   box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
 }
 .highlight-icon {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   display: grid;
   place-items: center;
   border-radius: var(--radius-md);
   background: var(--green-tint);
+  border: 1px solid rgba(20, 63, 53, 0.08);
   color: var(--green);
   font-size: 18px;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 .highlight-card h3 {
   margin: 0;
-  font-size: 15px;
+  font-size: clamp(15px, 1.4vw, 17px);
   font-weight: 800;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.02em;
   color: var(--ink);
 }
 .highlight-card p {
   margin: 0;
   color: var(--muted);
-  font-size: 12.5px;
+  font-size: clamp(12.5px, 1.1vw, 13.5px);
+  font-weight: 500;
   line-height: 1.6;
 }
 
@@ -649,51 +696,63 @@ html[data-theme="dark"] .brand-logo {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 28px;
+  margin-bottom: clamp(20px, 3vw, 30px);
 }
 .landing-section-num {
-  font: 600 11px "DM Mono", monospace;
+  font:
+    700 11px/1 "DM Mono",
+    monospace;
   color: var(--green);
+  background: var(--green-tint);
   border: 1px solid var(--green);
-  border-radius: 4px;
-  padding: 3px 7px;
-  letter-spacing: 1px;
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  letter-spacing: 0.08em;
 }
 .landing-section-header h2 {
   margin: 0;
-  font-size: 22px;
+  font-size: clamp(20px, 2.6vw, 26px);
   font-weight: 800;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.03em;
   color: var(--ink);
 }
 
 /* Roles section */
 .landing-roles {
-  max-width: 1100px;
-  margin: 0 auto 64px;
+  width: min(1160px, 100%);
+  margin: 0 auto clamp(56px, 8vw, 88px);
 }
 .landing-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: clamp(16px, 2.4vw, 26px);
 }
 .landing-card {
+  width: 100%;
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
   background: var(--white);
-  padding: 28px 24px;
+  padding: clamp(22px, 2.8vw, 28px) clamp(18px, 2.2vw, 24px);
   text-align: left;
   cursor: pointer;
-  transition: transform var(--transition), box-shadow var(--transition),
-    border-color var(--transition);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: clamp(16px, 2.2vw, 22px);
+  box-shadow: var(--shadow-xs);
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition),
+    border-color var(--transition);
+  position: relative;
 }
 .landing-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-xl);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
   border-color: var(--green);
+}
+.landing-card:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 .landing-card-header {
   display: flex;
@@ -701,36 +760,51 @@ html[data-theme="dark"] .brand-logo {
   gap: 14px;
 }
 .landing-card-icon {
-  font-size: 28px;
-  width: 52px;
-  height: 52px;
+  font-size: 24px;
+  width: 48px;
+  height: 48px;
   display: grid;
   place-items: center;
   border-radius: var(--radius-lg);
   background: var(--cream);
+  border: 1px solid var(--line);
   flex-shrink: 0;
+  transition: transform var(--transition);
+}
+.landing-card:hover .landing-card-icon {
+  transform: scale(1.04);
 }
 .landing-card-admin .landing-card-icon {
-  background: var(--green-soft);
+  background: #e8f5ec;
+  color: #143f35;
+  border-color: #bbf0c8;
 }
 .landing-card-hr .landing-card-icon {
-  background: #f0e4f5;
+  background: #f5edf8;
+  color: #6b21a8;
+  border-color: #e9d5ff;
 }
 .landing-card-employee .landing-card-icon {
-  background: #e4eef5;
+  background: #edf5f9;
+  color: #0369a1;
+  border-color: #bae6fd;
 }
 .landing-card-header strong {
-  font-size: 18px;
+  font-size: clamp(17px, 1.7vw, 19px);
   font-weight: 800;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.025em;
   color: var(--ink);
   display: block;
 }
 .landing-card-header small {
   color: var(--muted);
-  font: 10px "DM Mono", monospace;
+  font:
+    600 10px "DM Mono",
+    monospace;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.08em;
+  display: block;
+  margin-top: 2px;
 }
 .landing-card-list {
   list-style: none;
@@ -738,20 +812,23 @@ html[data-theme="dark"] .brand-logo {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
+  flex: 1;
 }
 .landing-list-item {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 7px 12px;
+  padding: 8px 12px;
   border-radius: var(--radius-md);
   background: var(--paper);
   border: 1px solid var(--line);
-  transition: border-color var(--transition);
+  transition:
+    background var(--transition),
+    border-color var(--transition);
 }
 .landing-card:hover .landing-list-item {
-  border-color: var(--green-soft);
+  background: var(--cream);
 }
 .landing-list-icon {
   font-size: 14px;
@@ -760,21 +837,32 @@ html[data-theme="dark"] .brand-logo {
   flex-shrink: 0;
 }
 .landing-list-text {
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 600;
   color: var(--ink);
+  letter-spacing: -0.01em;
 }
 .landing-card-cta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 16px;
+  padding-top: 14px;
+  margin-top: auto;
   border-top: 1px solid var(--line);
   color: var(--green);
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.landing-card-hr .landing-card-cta {
+  color: #7c3aed;
+}
+.landing-card-employee .landing-card-cta {
+  color: #0284c7;
 }
 .landing-card-arrow {
+  font-size: 15px;
+  font-weight: 800;
   transition: transform var(--transition);
 }
 .landing-card:hover .landing-card-arrow {
@@ -783,8 +871,8 @@ html[data-theme="dark"] .brand-logo {
 
 /* Workflow section */
 .landing-workflow {
-  max-width: 700px;
-  margin: 0 auto 64px;
+  width: min(780px, 100%);
+  margin: 0 auto clamp(56px, 8vw, 88px);
 }
 .workflow-list {
   display: flex;
@@ -793,37 +881,56 @@ html[data-theme="dark"] .brand-logo {
 }
 .workflow-list-item {
   display: flex;
-  gap: 20px;
-  min-height: 80px;
+  gap: clamp(14px, 2.5vw, 22px);
+  position: relative;
 }
 .workflow-list-marker {
   display: flex;
   flex-direction: column;
   align-items: center;
   flex-shrink: 0;
+  width: 36px;
 }
 .workflow-list-num {
-  font: 700 14px "DM Mono", monospace;
+  font:
+    700 12.5px "DM Mono",
+    monospace;
   color: var(--green);
   width: 36px;
   height: 36px;
   border: 2px solid var(--green);
-  border-radius: 50%;
+  border-radius: var(--radius-sm);
   display: grid;
   place-items: center;
   flex-shrink: 0;
   background: var(--white);
   z-index: 1;
+  box-shadow: var(--shadow-xs);
 }
 .workflow-list-line {
   width: 2px;
   flex: 1;
   background: var(--line);
-  margin: 4px 0;
+  margin: 6px 0;
+  min-height: 20px;
 }
 .workflow-list-body {
-  padding-bottom: 24px;
   flex: 1;
+  padding: clamp(16px, 2.2vw, 20px) clamp(16px, 2.4vw, 22px);
+  margin-bottom: clamp(12px, 1.8vw, 16px);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition),
+    transform var(--transition);
+}
+.workflow-list-body:hover {
+  border-color: var(--green);
+  box-shadow: var(--shadow-sm);
+  transform: translateX(3px);
 }
 .workflow-list-title {
   display: flex;
@@ -832,12 +939,20 @@ html[data-theme="dark"] .brand-logo {
   margin-bottom: 6px;
 }
 .workflow-list-icon {
-  font-size: 20px;
+  font-size: 16px;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-md);
+  background: var(--green-tint);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
 }
 .workflow-list-title h3 {
   margin: 0;
-  font-size: 16px;
+  font-size: clamp(15px, 1.4vw, 16px);
   font-weight: 800;
+  letter-spacing: -0.02em;
   color: var(--ink);
 }
 .workflow-list-body p {
@@ -845,63 +960,74 @@ html[data-theme="dark"] .brand-logo {
   font-size: 13px;
   line-height: 1.6;
   color: var(--muted);
+  font-weight: 500;
 }
 
 /* Permissions section */
 .landing-permissions {
-  max-width: 760px;
-  margin: 0 auto 48px;
+  width: min(840px, 100%);
+  margin: 0 auto clamp(48px, 7vw, 76px);
 }
 .permissions-table {
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
   overflow: hidden;
   background: var(--white);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-xs);
 }
 .permissions-row {
   display: grid;
   grid-template-columns: 2.2fr 1fr 1fr 1fr;
   align-items: center;
-  padding: 13px 22px;
+  padding: clamp(11px, 1.6vw, 14px) clamp(14px, 2.4vw, 24px);
   border-bottom: 1px solid var(--line);
   font-size: 13px;
+  transition: background var(--transition);
 }
 .permissions-row:last-child {
   border-bottom: 0;
 }
 .permissions-head {
   background: var(--cream);
+  border-bottom: 1px solid var(--line);
 }
 .permissions-head > span:first-child {
   color: var(--muted);
-  font: 600 10px "DM Mono", monospace;
+  font:
+    700 11px/1 "DM Mono",
+    monospace;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.1em;
 }
 .permissions-role {
   justify-self: center;
-  padding: 4px 11px;
-  border-radius: 20px;
-  font: 600 9px "DM Mono", monospace;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font:
+    700 10px "DM Mono",
+    monospace;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.08em;
 }
 .permissions-role-admin {
   background: var(--green);
   color: var(--lime);
 }
 .permissions-role-hr {
-  background: #efe1f5;
-  color: #6b3b7a;
+  background: #f5edf8;
+  color: #6b21a8;
+  border: 1px solid #e9d5ff;
 }
 .permissions-role-employee {
-  background: #e2edf5;
-  color: #3b5b6b;
+  background: #edf5f9;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
 }
 .permissions-mod {
-  font-weight: 600;
+  font-size: 13.5px;
+  font-weight: 700;
   color: var(--ink);
+  letter-spacing: -0.01em;
 }
 .perm-yes,
 .perm-no {
@@ -909,12 +1035,14 @@ html[data-theme="dark"] .brand-logo {
 }
 .perm-yes {
   color: var(--accent-ok);
-  font-weight: 700;
+  font-weight: 800;
   font-size: 15px;
 }
 .perm-no {
   color: var(--muted);
-  opacity: 0.4;
+  opacity: 0.45;
+  font-size: 14px;
+  font-weight: 600;
 }
 .permissions-row:not(.permissions-head):hover {
   background: var(--paper);
@@ -922,9 +1050,9 @@ html[data-theme="dark"] .brand-logo {
 
 /* Footer */
 .landing-footer {
-  max-width: 1100px;
-  margin: 40px auto 0;
-  padding-top: 28px;
+  width: min(1160px, 100%);
+  margin: clamp(40px, 6vw, 64px) auto 0;
+  padding-top: clamp(24px, 3.5vw, 36px);
   border-top: 1px solid var(--line);
   display: flex;
   align-items: center;
@@ -940,42 +1068,142 @@ html[data-theme="dark"] .brand-logo {
 }
 .landing-footer-logo {
   height: 24px;
+  width: auto;
 }
 .landing-footer-brand strong {
   color: var(--ink);
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 800;
+  letter-spacing: -0.02em;
 }
 .landing-footer-meta {
   display: flex;
   align-items: center;
   gap: 10px;
-  font: 10px "DM Mono", monospace;
+  font:
+    500 11px "DM Mono",
+    monospace;
+  letter-spacing: 0.04em;
 }
 .landing-footer-dot {
   width: 3px;
   height: 3px;
   border-radius: 50%;
   background: var(--muted);
+  opacity: 0.5;
 }
 
 /* Dark mode overrides for landing */
-html[data-theme="dark"] .landing-card-hr .landing-card-icon {
-  background: #3d2845;
+html[data-theme="dark"] .landing-theme-toggle {
+  background: var(--white);
+  border-color: var(--line);
+  color: var(--ink);
 }
-html[data-theme="dark"] .landing-card-employee .landing-card-icon {
-  background: #1d3340;
+html[data-theme="dark"] .landing-theme-toggle:hover {
+  background: var(--cream);
+  border-color: var(--green);
 }
-html[data-theme="dark"] .permissions-role-hr {
-  background: #3d2845;
-  color: #d4b0e0;
+html[data-theme="dark"] .landing-hero-stats {
+  background: var(--white);
+  border-color: var(--line);
 }
-html[data-theme="dark"] .permissions-role-employee {
-  background: #1d3340;
-  color: #9bc5d8;
+html[data-theme="dark"] .landing-hero-stat:hover {
+  background: var(--cream);
+}
+html[data-theme="dark"] .highlight-card {
+  background: var(--white);
+  border-color: var(--line);
+}
+html[data-theme="dark"] .highlight-card:hover {
+  border-color: var(--green);
 }
 html[data-theme="dark"] .highlight-icon {
-  background: var(--green-soft);
+  background: var(--cream);
+  color: var(--green);
+  border-color: var(--line);
+}
+html[data-theme="dark"] .landing-card {
+  background: var(--white);
+  border-color: var(--line);
+}
+html[data-theme="dark"] .landing-card-admin .landing-card-icon {
+  background: #182a20;
+  color: #8ed1ae;
+  border-color: #274837;
+}
+html[data-theme="dark"] .landing-card-admin:hover {
+  border-color: #8ed1ae;
+}
+html[data-theme="dark"] .landing-card-admin .landing-card-cta {
+  color: #8ed1ae;
+}
+html[data-theme="dark"] .landing-card-hr .landing-card-icon {
+  background: #2b1736;
+  color: #d8b4e2;
+  border-color: #4b265e;
+}
+html[data-theme="dark"] .landing-card-hr:hover {
+  border-color: #c084fc;
+}
+html[data-theme="dark"] .landing-card-hr .landing-card-cta {
+  color: #c084fc;
+}
+html[data-theme="dark"] .landing-card-employee .landing-card-icon {
+  background: #142433;
+  color: #9bc5d8;
+  border-color: #223f59;
+}
+html[data-theme="dark"] .landing-card-employee:hover {
+  border-color: #38bdf8;
+}
+html[data-theme="dark"] .landing-card-employee .landing-card-cta {
+  color: #38bdf8;
+}
+html[data-theme="dark"] .landing-list-item {
+  background: var(--paper);
+  border-color: var(--line);
+}
+html[data-theme="dark"] .landing-card:hover .landing-list-item {
+  background: var(--cream);
+  border-color: var(--line);
+}
+html[data-theme="dark"] .workflow-list-num {
+  background: var(--cream);
+  color: var(--green);
+  border-color: var(--green);
+}
+html[data-theme="dark"] .workflow-list-body {
+  background: var(--white);
+  border-color: var(--line);
+}
+html[data-theme="dark"] .workflow-list-body:hover {
+  border-color: var(--green);
+}
+html[data-theme="dark"] .workflow-list-icon {
+  background: var(--cream);
+  border: 1px solid var(--line);
+}
+html[data-theme="dark"] .permissions-table {
+  background: var(--white);
+  border-color: var(--line);
+}
+html[data-theme="dark"] .permissions-head {
+  background: var(--cream);
+}
+html[data-theme="dark"] .permissions-role-admin {
+  background: #182a20;
+  color: #8ed1ae;
+  border: 1px solid #274837;
+}
+html[data-theme="dark"] .permissions-role-hr {
+  background: #2b1736;
+  color: #d8b4e2;
+  border: 1px solid #4b265e;
+}
+html[data-theme="dark"] .permissions-role-employee {
+  background: #142433;
+  color: #9bc5d8;
+  border: 1px solid #223f59;
 }
 
 /* Responsive */
@@ -989,7 +1217,7 @@ html[data-theme="dark"] .highlight-icon {
 }
 @media (max-width: 600px) {
   .permissions-row {
-    padding: 11px 14px;
+    padding: 10px 12px;
     font-size: 12px;
     grid-template-columns: 1.6fr 1fr 1fr 1fr;
   }
@@ -1003,6 +1231,9 @@ html[data-theme="dark"] .highlight-icon {
   .landing-hero-stat:last-child {
     border-bottom: 0;
   }
+  .workflow-list-item {
+    gap: 12px;
+  }
 }
 
 /* ---- Role badges & status pills ---- */
@@ -1010,7 +1241,9 @@ html[data-theme="dark"] .highlight-icon {
   display: inline-block;
   padding: 3px 8px;
   border-radius: 12px;
-  font: 600 10px "DM Mono", monospace;
+  font:
+    600 10px "DM Mono",
+    monospace;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -1034,7 +1267,9 @@ html[data-theme="dark"] .highlight-icon {
   display: inline-block;
   padding: 3px 10px;
   border-radius: 12px;
-  font: 600 10px "DM Mono", monospace;
+  font:
+    600 10px "DM Mono",
+    monospace;
   text-transform: uppercase;
 }
 .pill-active {
@@ -1063,9 +1298,6 @@ html[data-theme="dark"] .role-manager {
   background: #1d3340;
   color: #9bc5d8;
 }
-html[data-theme="dark"] .landing-card-hr .landing-card-icon {
-  color: #d4b0e0;
-}
 
 /* ---- Notifications ---- */
 .notif-wrapper {
@@ -1084,7 +1316,9 @@ html[data-theme="dark"] .landing-card-hr .landing-card-icon {
   border-radius: 8px;
   background: var(--accent-warn);
   color: var(--white);
-  font: 600 9px Manrope, sans-serif;
+  font:
+    600 9px Manrope,
+    sans-serif;
   display: grid;
   place-items: center;
   line-height: 1;
@@ -1134,7 +1368,9 @@ html[data-theme="dark"] .landing-card-hr .landing-card-icon {
 .notification-item span span {
   display: block;
   color: var(--muted);
-  font: 9px "DM Mono", monospace;
+  font:
+    9px "DM Mono",
+    monospace;
   margin-top: 2px;
 }
 .notification-dot {
@@ -1200,7 +1436,9 @@ html[data-theme="dark"] .landing-card-hr .landing-card-icon {
 }
 .held-label {
   color: var(--muted);
-  font: 10px "DM Mono", monospace;
+  font:
+    10px "DM Mono",
+    monospace;
   text-transform: uppercase;
 }
 .held-chip {
@@ -1211,7 +1449,9 @@ html[data-theme="dark"] .landing-card-hr .landing-card-icon {
   padding: 5px 12px;
   font-size: 11px;
   font-weight: 600;
-  transition: border-color var(--transition), background var(--transition);
+  transition:
+    border-color var(--transition),
+    background var(--transition);
 }
 .held-chip:hover {
   border-color: var(--green);
@@ -1225,7 +1465,9 @@ footer {
   padding: 17px 4.4vw;
   color: #8e9188;
   border-top: 1px solid var(--line);
-  font: 10px "DM Mono", monospace;
+  font:
+    10px "DM Mono",
+    monospace;
 }
 footer i {
   margin-right: 5px;
@@ -1262,7 +1504,9 @@ footer b {
 }
 .entry-brand small {
   color: var(--muted);
-  font: 9px "DM Mono", monospace;
+  font:
+    9px "DM Mono",
+    monospace;
   letter-spacing: 1px;
 }
 .entry-topbar {
@@ -1280,11 +1524,15 @@ footer b {
   background: var(--white);
   color: var(--muted);
   padding: 8px 15px;
-  font: 600 10px "DM Mono", monospace;
+  font:
+    600 10px "DM Mono",
+    monospace;
   text-transform: uppercase;
   letter-spacing: 1px;
   cursor: pointer;
-  transition: color var(--transition), border-color var(--transition),
+  transition:
+    color var(--transition),
+    border-color var(--transition),
     background var(--transition);
 }
 .entry-logout:hover {
@@ -1321,12 +1569,16 @@ footer b {
   display: grid;
   gap: 13px;
   color: var(--muted);
-  font: 10px "DM Mono", monospace;
+  font:
+    10px "DM Mono",
+    monospace;
 }
 .entry-steps b {
   margin-left: 13px;
   color: var(--ink);
-  font: 600 11px Manrope, sans-serif;
+  font:
+    600 11px Manrope,
+    sans-serif;
 }
 .entry-form {
   padding: 30px;
@@ -1349,7 +1601,9 @@ footer b {
   gap: 8px;
   margin-top: 15px;
   color: var(--muted);
-  font: 10px "DM Mono", monospace;
+  font:
+    10px "DM Mono",
+    monospace;
   text-transform: uppercase;
 }
 .entry-form input {
@@ -1360,7 +1614,9 @@ footer b {
   outline-color: var(--green);
   background: var(--paper);
   color: var(--ink);
-  font: 12px Manrope, sans-serif;
+  font:
+    12px Manrope,
+    sans-serif;
   text-transform: none;
 }
 .entry-form .form-row.two-col {

@@ -68,7 +68,12 @@ const roleCards: RoleCard[] = [
   },
 ];
 
-const workflowSteps: { num: string; icon: string; title: string; desc: string }[] = [
+const workflowSteps: {
+  num: string;
+  icon: string;
+  title: string;
+  desc: string;
+}[] = [
   {
     num: "01",
     icon: "🏪",
@@ -145,10 +150,6 @@ export function LandingPage({ onSelect }: Props) {
       </button>
 
       <section className="landing-hero">
-        <span className="landing-hero-badge">
-          <span className="landing-hero-badge-dot" />
-          Billing, inventory &amp; people in one place
-        </span>
         <h1 className="sr-only">WorkNest</h1>
         <BrandLogo
           className="landing-hero-logo"
@@ -257,7 +258,9 @@ export function LandingPage({ onSelect }: Props) {
         <div className="permissions-table">
           <div className="permissions-row permissions-head">
             <span>Module</span>
-            <span className="permissions-role permissions-role-admin">Admin</span>
+            <span className="permissions-role permissions-role-admin">
+              Admin
+            </span>
             <span className="permissions-role permissions-role-hr">HR</span>
             <span className="permissions-role permissions-role-employee">
               Employee

@@ -213,3 +213,10 @@ The backend saves the first-use timestamp in the settings collection. Monthly re
 Sales are stored separately from products. Completing a sale reduces the stock of each referenced product. Deleting a product does not delete historical sales.
 
 The backend removes the obsolete `businessId_1_sku_1` product index during startup if it exists.
+
+## License & Legal Disclaimer
+
+This project is licensed under the [MIT License](LICENSE) by **Quibble Byte** and **Muhammad Ahmed**.
+
+> **DISCLAIMER:**  
+> Any illegal, unauthorized, or illicit use of this product, codebase, or software is strictly prohibited and not entertained. The author, repository holder, and copyright owner (**Muhammad Ahmed** / Quibble Byte) shall not be held liable or responsible for any damages, misuse, regulatory breaches, or unlawful activities arising from the use, deployment, or modification of this code.
