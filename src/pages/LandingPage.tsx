@@ -26,7 +26,8 @@ const roleCards: RoleCard[] = [
     icon: "⚙",
     title: "Administrator",
     badge: "Full Control",
-    tagline: "Central multi-branch governance, system configurations, and operational audit logs.",
+    tagline:
+      "Central multi-branch governance, system configurations, and operational audit logs.",
     accent: "admin",
     btnLabel: "Enter Admin Suite",
     modules: [
@@ -46,7 +47,8 @@ const roleCards: RoleCard[] = [
     icon: "🧑",
     title: "Human Resources",
     badge: "People & Payroll",
-    tagline: "Workforce directory, compensation structures, salary slips, and HR analytics.",
+    tagline:
+      "Workforce directory, compensation structures, salary slips, and HR analytics.",
     accent: "hr",
     btnLabel: "Enter HR Workspace",
     modules: [
@@ -62,7 +64,8 @@ const roleCards: RoleCard[] = [
     icon: "🧷",
     title: "Store Employee / POS",
     badge: "Daily Operations",
-    tagline: "High-speed barcode checkout, inventory lookups, customer registers, and daily closing.",
+    tagline:
+      "High-speed barcode checkout, inventory lookups, customer registers, and daily closing.",
     accent: "employee",
     btnLabel: "Open POS Station",
     modules: [
@@ -185,11 +188,17 @@ export function LandingPage({ onSelect }: Props) {
           />
 
           <h1 className="landing-hero-title">
-            Unified Enterprise <span className="landing-hero-title-accent">ERP, POS &amp; HRM</span> System
+            Unified Enterprise{" "}
+            <span className="landing-hero-title-accent">
+              ERP, POS &amp; HRM
+            </span>{" "}
+            System
           </h1>
 
           <p className="landing-hero-subtitle">
-            One fluid platform to run multi-branch retail checkout, real-time warehouse inventory, employee operations, and automated payroll without external dependencies.
+            One fluid platform to run multi-branch retail checkout, real-time
+            warehouse inventory, employee operations, and automated payroll
+            without external dependencies.
           </p>
 
           {/* Quick workspace launch buttons */}
@@ -227,7 +236,9 @@ export function LandingPage({ onSelect }: Props) {
             </div>
             <div className="landing-metric-cell">
               <span className="landing-metric-value">Real-Time</span>
-              <span className="landing-metric-label">Inventory &amp; Sales</span>
+              <span className="landing-metric-label">
+                Inventory &amp; Sales
+              </span>
             </div>
             <div className="landing-metric-cell">
               <span className="landing-metric-value">Multi-Store</span>
@@ -243,7 +254,9 @@ export function LandingPage({ onSelect }: Props) {
                 <span className="landing-mockup-dot" />
                 <span className="landing-mockup-dot" />
               </div>
-              <span className="landing-mockup-title">WorkNest Operational Console v2.0</span>
+              <span className="landing-mockup-title">
+                WorkNest Operational Console v2.0
+              </span>
               <div className="landing-mockup-status">
                 <span className="landing-mockup-dot landing-mockup-dot-active" />
                 <span>ONLINE &bull; DOWNTOWN BRANCH</span>
@@ -254,8 +267,12 @@ export function LandingPage({ onSelect }: Props) {
               {/* Mock POS Terminal */}
               <div className="landing-mockup-panel">
                 <div className="landing-panel-head">
-                  <h4><span>🛒</span> POS Station #01</h4>
-                  <span className="landing-tag landing-tag-green">ACTIVE REGISTER</span>
+                  <h4>
+                    <span>🛒</span> POS Station #01
+                  </h4>
+                  <span className="landing-tag landing-tag-green">
+                    ACTIVE REGISTER
+                  </span>
                 </div>
                 <div className="landing-panel-row">
                   <span>Ticket #TX-8924</span>
@@ -278,7 +295,9 @@ export function LandingPage({ onSelect }: Props) {
               {/* Mock ERP Inventory Monitor */}
               <div className="landing-mockup-panel">
                 <div className="landing-panel-head">
-                  <h4><span>📦</span> Multi-Branch ERP</h4>
+                  <h4>
+                    <span>📦</span> Multi-Branch ERP
+                  </h4>
                   <span className="landing-tag">STOCK RADAR</span>
                 </div>
                 <div className="landing-panel-row">
@@ -295,15 +314,21 @@ export function LandingPage({ onSelect }: Props) {
                 </div>
                 <div className="landing-panel-row landing-panel-total">
                   <span>Sync Status</span>
-                  <strong style={{ color: "var(--accent-ok)" }}>All Branches In Sync</strong>
+                  <strong style={{ color: "var(--accent-ok)" }}>
+                    All Branches In Sync
+                  </strong>
                 </div>
               </div>
 
               {/* Mock HRM Payroll Status */}
               <div className="landing-mockup-panel">
                 <div className="landing-panel-head">
-                  <h4><span>💰</span> HRM &amp; Payroll</h4>
-                  <span className="landing-tag landing-tag-green">VERIFIED</span>
+                  <h4>
+                    <span>💰</span> HRM &amp; Payroll
+                  </h4>
+                  <span className="landing-tag landing-tag-green">
+                    VERIFIED
+                  </span>
                 </div>
                 <div className="landing-panel-row">
                   <span>Active Headcount</span>
@@ -314,7 +339,10 @@ export function LandingPage({ onSelect }: Props) {
                   <strong>October 2026</strong>
                 </div>
                 <div className="landing-progress-track">
-                  <div className="landing-progress-fill" style={{ width: "100%" }} />
+                  <div
+                    className="landing-progress-fill"
+                    style={{ width: "100%" }}
+                  />
                 </div>
                 <div className="landing-panel-row landing-panel-total">
                   <span>Payroll Dispatched</span>
@@ -328,10 +356,13 @@ export function LandingPage({ onSelect }: Props) {
         {/* ================= 3 CORE SUITE PILLARS ================= */}
         <section className="landing-section">
           <div className="landing-section-head">
-            <span className="landing-section-step">The 3-In-1 Architecture</span>
+            <span className="landing-section-step">
+              The 3-In-1 Architecture
+            </span>
             <h2>Complete Enterprise Coverage</h2>
             <p>
-              Replace fragmented tools with a unified suite tailored for retail chains, franchise operations, and growing organizations.
+              Replace fragmented tools with a unified suite tailored for retail
+              chains, franchise operations, and growing organizations.
             </p>
           </div>
 
@@ -360,10 +391,13 @@ export function LandingPage({ onSelect }: Props) {
         {/* ================= WORKSPACE SELECTION ================= */}
         <section className="landing-section">
           <div className="landing-section-head">
-            <span className="landing-section-step">01 &bull; Select Workspace</span>
+            <span className="landing-section-step">
+              01 &bull; Select Workspace
+            </span>
             <h2>Choose Your Operator Role</h2>
             <p>
-              Select your designated profile below to launch your tailored environment with role-specific views and tools.
+              Select your designated profile below to launch your tailored
+              environment with role-specific views and tools.
             </p>
           </div>
 
@@ -411,10 +445,13 @@ export function LandingPage({ onSelect }: Props) {
         {/* ================= OPERATIONAL WORKFLOW ================= */}
         <section className="landing-section">
           <div className="landing-section-head">
-            <span className="landing-section-step">02 &bull; Execution Pipeline</span>
+            <span className="landing-section-step">
+              02 &bull; Execution Pipeline
+            </span>
             <h2>How WorkNest Powers Operations</h2>
             <p>
-              A continuous, auditable operational flow from store opening and staff scheduling to checkout and financial closing.
+              A continuous, auditable operational flow from store opening and
+              staff scheduling to checkout and financial closing.
             </p>
           </div>
 
@@ -433,10 +470,14 @@ export function LandingPage({ onSelect }: Props) {
         {/* ================= ROLE PERMISSIONS MATRIX ================= */}
         <section className="landing-section">
           <div className="landing-section-head">
-            <span className="landing-section-step">03 &bull; Access Governance</span>
+            <span className="landing-section-step">
+              03 &bull; Access Governance
+            </span>
             <h2>Role Permissions Matrix</h2>
             <p>
-              Granular access control ensures that sensitive data, executive financials, and payroll stay protected while giving store staff maximum checkout velocity.
+              Granular access control ensures that sensitive data, executive
+              financials, and payroll stay protected while giving store staff
+              maximum checkout velocity.
             </p>
           </div>
 
@@ -478,7 +519,9 @@ export function LandingPage({ onSelect }: Props) {
           <div className="landing-footer-top">
             <div className="landing-footer-brand">
               <BrandLogo className="landing-footer-logo" alt="WorkNest Logo" />
-              <span className="landing-footer-title">WorkNest ERP &bull; POS &bull; HRM</span>
+              <span className="landing-footer-title">
+                WorkNest ERP &bull; POS &bull; HRM
+              </span>
             </div>
 
             <div className="landing-footer-links">
@@ -516,7 +559,10 @@ export function LandingPage({ onSelect }: Props) {
             </div>
 
             <p className="landing-footer-disclaimer">
-              Notice: Unauthorized or illegal use of this product or code is strictly prohibited. The author and repository owner (Muhammad Ahmed) assumes no liability or responsibility for improper usage or downstream deployment damages.
+              Notice: Unauthorized or illegal use of this product or code is
+              strictly prohibited. The author and repository owner (Muhammad
+              Ahmed) assumes no liability or responsibility for improper usage
+              or downstream deployment damages.
             </p>
           </div>
         </div>
