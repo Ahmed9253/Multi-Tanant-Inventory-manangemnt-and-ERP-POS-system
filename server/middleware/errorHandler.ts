@@ -38,6 +38,8 @@ export function notFoundHandler(request: Request, response: Response): void {
   });
 }
 
+let lastDatabaseWarnAt = 0;
+
 export function errorHandler(
   error: HttpError,
   _request: Request,
@@ -45,6 +47,15 @@ export function errorHandler(
   _next: NextFunction,
 ): void {
   const status = resolveStatus(error);
-  if (status >= 500) console.error("[api]", error);
+  if (status === 503) {
+    // Database outages are expected during setup; log a single concise line
+    // at most once every 10s instead of a full stack trace per request.
+    if (Date.now() - lastDatabaseWarnAt > 10_000) {
+      lastDatabaseWarnAt = Date.now();
+      console.warn(`[api] database unavailable: ${error.message}`);
+    }
+  } else if (status >= 500) {
+    console.error("[api]", error);
+  }
   response.status(status).json({ error: resolveMessage(error, status) });
 }

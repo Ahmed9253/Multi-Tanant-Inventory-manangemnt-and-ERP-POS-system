@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "mongo": "bash scripts/start-mongo.sh",
     "server": "tsx server-run.ts",
     "dev:full": "concurrently \"npm run server\" \"npm run dev\"",
     "start": "npm run build && concurrently \"npm run server\" \"npm run dev\"",

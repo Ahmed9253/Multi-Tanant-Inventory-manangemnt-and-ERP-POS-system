@@ -39,6 +39,30 @@ cp .env.example .env
 
 Then edit `.env` if you need a different MongoDB connection string or admin login.
 
+## Database
+
+The API needs MongoDB. Pick one:
+
+- **Local MongoDB** — run a server on `127.0.0.1:27017` (the default
+  `MONGODB_URI`):
+
+  ```bash
+  npm run mongo   # starts mongod with a persistent data dir
+  ```
+
+  The script looks for `mongod` on your `PATH`, then at
+  `~/.local/mongodb/bin/mongod`. Data is stored in `~/.local/mongodb/data`
+  (outside the repo). It is safe to run repeatedly — it exits if MongoDB is
+  already listening. If `mongod` is not installed, install MongoDB Community
+  Server first, or use Atlas.
+
+- **MongoDB Atlas** — put the SRV connection string in `MONGODB_URI` in
+  `.env`. Use this to match production (Vercel).
+
+If the API starts but the database is unreachable, it still serves `/api/health`
+and returns HTTP `503` for data routes. Connection failures are retried after a
+short cooldown, so once MongoDB is up the app recovers on its own.
+
 ## Development
 
 Run the frontend and backend together:
@@ -63,16 +87,16 @@ The Vite dev server proxies `/api` requests to the Express server (see `vite.con
 
 ## Environment variables
 
-| Variable                | Used by | Local value                                     | Vercel value                                              |
-| ----------------------- | ------- | ----------------------------------------------- | --------------------------------------------------------- |
-| `MONGODB_URI`           | API     | `mongodb://127.0.0.1:27017/worknest_pos`        | Atlas string `mongodb+srv://<user>:<pass>@<cluster>/...`  |
-| `PORT`                  | API     | `4000`                                          | not needed (ignored by serverless)                        |
-| `ADMIN_NAME`            | API     | `Administrator`                                 | same                                                      |
-| `ADMIN_EMAIL`           | API     | `admin@worknest.com`                            | a real admin email                                        |
-| `ADMIN_PASSWORD`        | API     | `admin123`                                      | a strong password                                         |
-| `CLIENT_ORIGIN`         | API     | empty (Vite proxies same-origin)                | empty for one domain, or your deployed URL                |
-| `VITE_API_BASE_URL`     | Web     | empty (Vite proxy)                              | empty for same origin, or your API origin                 |
-| `VITE_API_PROXY_TARGET` | Web dev | `http://localhost:4000`                         | not needed                                                |
+| Variable                | Used by | Local value                              | Vercel value                                             |
+| ----------------------- | ------- | ---------------------------------------- | -------------------------------------------------------- |
+| `MONGODB_URI`           | API     | `mongodb://127.0.0.1:27017/worknest_pos` | Atlas string `mongodb+srv://<user>:<pass>@<cluster>/...` |
+| `PORT`                  | API     | `4000`                                   | not needed (ignored by serverless)                       |
+| `ADMIN_NAME`            | API     | `Administrator`                          | same                                                     |
+| `ADMIN_EMAIL`           | API     | `admin@worknest.com`                     | a real admin email                                       |
+| `ADMIN_PASSWORD`        | API     | `admin123`                               | a strong password                                        |
+| `CLIENT_ORIGIN`         | API     | empty (Vite proxies same-origin)         | empty for one domain, or your deployed URL               |
+| `VITE_API_BASE_URL`     | Web     | empty (Vite proxy)                       | empty for same origin, or your API origin                |
+| `VITE_API_PROXY_TARGET` | Web dev | `http://localhost:4000`                  | not needed                                               |
 
 **What changes between local and Vercel**
 
@@ -97,15 +121,16 @@ await api.patch(endpoints.products.update(id), patch);
 
 ## Scripts
 
-| Command                   | Description                                       |
-| ------------------------- | ------------------------------------------------- |
-| `npm run dev`             | Start the Vite dev server                         |
-| `npm run server`          | Start the Express API with `tsx`                  |
-| `npm run dev:full`        | Start frontend and API together                   |
-| `npm run build`           | Type-check web + server, then build the SPA       |
-| `npm run typecheck:server`| Type-check only the API (`tsconfig.server.json`)  |
-| `npm run preview`         | Preview the production build locally              |
-| `npm run lint`            | Run Oxlint                                        |
+| Command                    | Description                                      |
+| -------------------------- | ------------------------------------------------ |
+| `npm run dev`              | Start the Vite dev server                        |
+| `npm run mongo`            | Start a local MongoDB server for development     |
+| `npm run server`           | Start the Express API with `tsx`                 |
+| `npm run dev:full`         | Start frontend and API together                  |
+| `npm run build`            | Type-check web + server, then build the SPA      |
+| `npm run typecheck:server` | Type-check only the API (`tsconfig.server.json`) |
+| `npm run preview`          | Preview the production build locally             |
+| `npm run lint`             | Run Oxlint                                       |
 
 ## Project structure
 
@@ -126,6 +151,7 @@ server/                     Express application (routes / controllers / models)
   middleware/               DB guard, async handler, error handler
 api/index.ts                Vercel serverless entry point
 server-run.ts               Local API launcher
+scripts/start-mongo.sh      Local MongoDB launcher for development
 vercel.json                 Vercel build, function, and rewrite config
 ```
 
